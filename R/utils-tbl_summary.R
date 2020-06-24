@@ -442,9 +442,7 @@ assign_sort <- function(variable, summary_type, sort) {
 # this should include EVERY input of \code{\link{tbl_summary}} in the same order
 # copy and paste them from \code{\link{tbl_summary}}
 tbl_summary_data_checks <- function(data) {
-  if (is_survey(data)) {
-    return(tbl_summary_data_checks(data$variables))
-  }
+  data <- raw_data(data)
 
   # data -----------------------------------------------------------------------
   # data is a data frame
@@ -465,12 +463,7 @@ tbl_summary_data_checks <- function(data) {
 
 tbl_summary_input_checks <- function(data, by, label, type, value, statistic,
                                      digits, missing, missing_text, sort) {
-  if (is_survey(data)) {
-    return(tbl_summary_input_checks(
-      data$variables, by, label, type, value, statistic,
-      digits, missing, missing_text, sort
-    ))
-  }
+  data <- raw_data(data)
 
   # data -----------------------------------------------------------------------
   tbl_summary_data_checks(data)
@@ -1227,12 +1220,7 @@ df_stats_to_tbl <- function(data, variable, summary_type, by, var_label, stat_di
   }
 
   # add rows for missing -------------------------------------------------------
-  if (is_survey(data)) {
-    na_in_data <- (sum(is.na(data$variables[[variable]])) > 0)
-  } else {
-    na_in_data <- (sum(is.na(data[[variable]])) > 0)
-  }
-  if (missing == "always" || (missing == "ifany" & na_in_data)) {
+  if (missing == "always" || (missing == "ifany" & sum(is.na(raw_data(data)[[variable]])) > 0)) {
     result <-
       result %>%
       bind_rows(

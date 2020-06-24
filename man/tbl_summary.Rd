@@ -21,7 +21,7 @@ tbl_summary(
 )
 }
 \arguments{
-\item{data}{A data frame}
+\item{data}{A data frame or a survey object created with \code{\link[survey:svydesign]{survey::svydesign()}}}
 
 \item{by}{A column name (quoted or unquoted) in \code{data}.
 Summary statistics will be calculated separately for each level of the \code{by}
@@ -131,6 +131,14 @@ For continuous variables the following statistics are available to display.
 \item \code{{foo}} any function of the form \code{foo(x)} is accepted where \code{x} is a numeric vector
 }
 
+For survey objects, custom \code{{foo}} function is not supported. For categorical variables,
+you can also use the following statistics:
+\itemize{
+\item \code{{n_unweighted}} unweighted frequency
+\item \code{{N_unweighted}} unweighted denominator
+\item \code{{p_unweighted}} unweighted formatted percentage
+}
+
 For both categorical and continuous variables, statistics on the number of
 missing and non-missing observations and their proportions are available to
 display.
@@ -145,6 +153,11 @@ display.
 Note that for categorical variables, \code{{N_obs}}, \code{{N_miss}} and \code{{N_nonmiss}} refer
 to the total number, number missing and number non missing observations
 in the denominator, not at each level of the categorical variable.
+
+Note that for survey objects, \code{{N_obs}}, \code{{N_miss}} and \code{{N_nonmiss}} take into
+account survey weights. You also have unweighted versions: \code{{N_obs_unweighted}},
+\code{{N_miss_unweighted}}, \code{{N_nonmiss_unweighted}}, \code{{p_miss_unweighted}} and
+\code{{p_nonmiss_unweighted}}.
 }
 
 \section{type argument}{
@@ -200,6 +213,12 @@ tbl_summary_ex3 <-
     by = trt,
     label = list(age = "Patient Age")
   )
+
+# Example 4 with weights --------------------
+d <- survey::svydesign(~1, data = as.data.frame(Titanic), weights = ~Freq)
+tbl_summary(d, by = "Survived", include = -Freq, percent = "row")
+
+
 }
 \seealso{
 See tbl_summary \href{http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html}{vignette} for detailed tutorial

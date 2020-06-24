@@ -14,7 +14,7 @@
 assign_class <- function(data, variable, classes_expected) {
   # extracing the base R class
   classes_return <-
-    map(variable, ~class(data[[.x]]) %>% intersect(classes_expected))
+    map(variable, ~class(raw_data(data)[[.x]]) %>% intersect(classes_expected))
   classes_return
 }
 
@@ -148,6 +148,10 @@ assign_stat_display <- function(variable, summary_type, stat_display) {
 #'   summary_type = NULL, value = NULL
 #' )
 assign_summary_type <- function(data, variable, class, summary_type, value) {
+  if (is_survey(data)) {
+    return(assign_summary_type(data$variables, variable, class, summary_type, value))
+  }
+
   # checking if user requested type = "categorical" for variable that is all missing
   if (!is.null(summary_type)) {
     summary_type <- purrr::imap(
@@ -337,6 +341,10 @@ continuous_digits_guess_one <- function(data,
 df_by <- function(data, by) {
   if (is.null(by)) return(NULL)
 
+  if(is_survey(data)) {
+    return(df_by_survey(data, by))
+  }
+
   if (inherits(data[[by]], "factor"))
     result <- tibble(by = attr(data[[by]], "levels") %>%
                        factor(x = ., levels= ., labels = .))
@@ -359,6 +367,42 @@ df_by <- function(data, by) {
   result
 }
 
+#' @importFrom stats as.formula
+df_by_survey <- function(data, by) {
+  if (is.null(by)) return(NULL)
+
+  svy_table <- survey::svytable(stats::as.formula(paste("~", by)), data, round = TRUE) %>%
+    as_tibble() %>%
+    set_names("by", "n") %>%
+    mutate(
+      N = sum(.data$n),
+      p = .data$n / .data$N
+    )
+
+  result <- df_by(data$variables, by) %>%
+    rename(n_unweighted = n, N_unweighted = N, p_unweighted = p) %>%
+    left_join(svy_table, by = "by")
+
+  result
+}
+
+#' Test if data is a survey object
+#' @noRd
+is_survey <- function(data) {
+  return(inherits(data, "survey.design") | inherits(data, "svyrep.design"))
+}
+
+#' Get raw data (i.e. as a data frame)
+#'
+#' If `data` is a survey object, it will return `data$variables`
+#' @noRd
+raw_data <- function(data) {
+  if (is_survey(data)) {
+    return(data$variables)
+  } else {
+    return(data)
+  }
+}
 
 #' Assigns categorical variables sort type ("alphanumeric" or "frequency")
 #'
@@ -398,6 +442,10 @@ assign_sort <- function(variable, summary_type, sort) {
 # this should include EVERY input of \code{\link{tbl_summary}} in the same order
 # copy and paste them from \code{\link{tbl_summary}}
 tbl_summary_data_checks <- function(data) {
+  if (is_survey(data)) {
+    return(tbl_summary_data_checks(data$variables))
+  }
+
   # data -----------------------------------------------------------------------
   # data is a data frame
   if (!is.data.frame(data)) {
@@ -417,6 +465,13 @@ tbl_summary_data_checks <- function(data) {
 
 tbl_summary_input_checks <- function(data, by, label, type, value, statistic,
                                      digits, missing, missing_text, sort) {
+  if (is_survey(data)) {
+    return(tbl_summary_input_checks(
+      data$variables, by, label, type, value, statistic,
+      digits, missing, missing_text, sort
+    ))
+  }
+
   # data -----------------------------------------------------------------------
   tbl_summary_data_checks(data)
 
@@ -739,6 +794,11 @@ footnote_stat_label <- function(meta_data) {
 
 # summarize_categorical --------------------------------------------------------
 summarize_categorical <- function(data, variable, by, class, dichotomous_value, sort, percent) {
+  # test if a survey object
+  if (is_survey(data)) {
+    return(summarize_categorical_survey(data, variable, by, class, dichotomous_value, sort, percent))
+  }
+
   # grabbing percent formatting function
   percent_fun <-
     get_theme_element("tbl_summary-fn:percent_fun") %||%
@@ -823,25 +883,82 @@ summarize_categorical <- function(data, variable, by, class, dichotomous_value, 
   result
 }
 
+# summarize_categorical for survey design --------------------------------------------------------
+#' @importFrom survey svytable
+summarize_categorical_survey <- function(data, variable, by, class, dichotomous_value, sort, percent) {
+  df_stats <- summarize_categorical(data$variables, variable, by, class, dichotomous_value, sort, percent) %>%
+    rename(n_unweighted = n, N_unweighted = N, p_unweighted = p)
+
+  if (is.null(by)) {
+    svy_table <- survey::svytable(stats::as.formula(paste("~", variable)), data) %>%
+      as_tibble() %>%
+      set_names("variable_levels", "n")
+  } else {
+    svy_table <- survey::svytable(stats::as.formula(paste("~", by, "+", variable)), data) %>%
+      as_tibble() %>%
+      set_names("by", "variable_levels", "n")
+  }
+
+  svy_table <- svy_table %>%
+    mutate(
+      variable = as.character(variable),
+    )
+
+  # calculating percent
+  group_by_percent <- switch(
+    percent,
+    "cell" = "",
+    "column" = ifelse(!is.null(by), "by", ""),
+    "row" = "variable_levels"
+  )
+
+  svy_table <- svy_table %>%
+    group_by(!!!syms(group_by_percent)) %>%
+    mutate(
+      N = sum(.data$n),
+      # if the Big N is 0, there is no denom so making percent NA
+      p = ifelse(.data$N == 0, NA, .data$n / .data$N)
+    ) %>%
+    ungroup()
+
+  if (!is.null(dichotomous_value)) {
+    svy_table <- svy_table %>%
+      filter(.data$variable_levels == !!dichotomous_value) %>%
+      select(-.data$variable_levels)
+  }
+
+  suppressMessages(
+    df_stats <- df_stats %>%
+      left_join(svy_table)
+  )
+
+  attr(df_stats$p, "fmt_fun") <- attr(df_stats$p_unweighted, "fmt_fun")
+  attr(df_stats$N, "fmt_fun") <- attr(df_stats$N_unweighted, "fmt_fun")
+  attr(df_stats$n, "fmt_fun") <- attr(df_stats$n_unweighted, "fmt_fun")
+
+  # returning final object
+  df_stats
+}
+
+
 # summarize_continuous ---------------------------------------------------------
 summarize_continuous <- function(data, variable, by, stat_display, digits) {
+  # test if a survey object
+  if (is_survey(data)) {
+    return(summarize_continuous_survey(data, variable, by, stat_display, digits))
+  }
+
   # stripping attributes/classes that cause issues -----------------------------
   # tidyr::complete throws warning `has different attributes on LHS and RHS of join`
   # when variable has label.  So deleting it.
   attr(data[[variable]], "label") <- NULL
   if (!is.null(by)) attr(data[[by]], "label") <- NULL
-  # same thing when the class "labelled" is included when labeled with the Hmisc package
+  # same thing when the class "labelled" is included when labelled with the Hmisc package
   class(data[[variable]]) <- setdiff(class(data[[variable]]), "labelled")
   if (!is.null(by)) class(data[[by]]) <- setdiff(class(data[[by]]), "labelled")
 
   # extracting function calls
-  fns_names_chr <-
-    str_extract_all(stat_display, "\\{.*?\\}") %>%
-    map(str_remove_all, pattern = fixed("}")) %>%
-    map(str_remove_all, pattern = fixed("{")) %>%
-    unlist() %>%
-    # removing elements protected as other items
-    setdiff(c("p_miss", "p_nonmiss", "N_miss", "N_nonmiss", "N_obs"))
+  fns_names_chr <- extracting_function_calls_from_stat_display(stat_display, variable)
 
   # defining shortcut quantile functions, if needed
   if (any(fns_names_chr %in% paste0("p", 0:100))) {
@@ -852,17 +969,6 @@ summarize_continuous <- function(data, variable, by, stat_display, digits) {
         probs = as.numeric(stringr::str_replace(.x, pattern = "^p", "")) / 100
       )) %>%
       list2env(envir = rlang::env_parent())
-  }
-
-  if (length(fns_names_chr) == 0) stop(glue(
-    "No summary function found in `{stat_display}` for variable '{variable}'.\n",
-    "Did you wrap the function name in curly brackets?"
-  ), call. = FALSE)
-
-  if (any(c("by", "variable") %in% fns_names_chr)) {
-    stop(paste(
-      "'by' and 'variable' are protected names, and continuous variables",
-      "cannot be summarized with functions by the these name."), call. = FALSE)
   }
 
   # prepping data set
@@ -911,6 +1017,37 @@ summarize_continuous <- function(data, variable, by, stat_display, digits) {
   }
 
   # adding formatting function as attr to summary statistics columns
+  df_stats <- adding_formatting_as_attr(df_stats, digits, fns_names_chr)
+
+  # returning final object
+  df_stats
+}
+
+# extracting_function_calls_from_stat_display ---------------------
+extracting_function_calls_from_stat_display <- function(stat_display, variable) {
+  fns_names_chr <- str_extract_all(stat_display, "\\{.*?\\}") %>%
+    map(str_remove_all, pattern = fixed("}")) %>%
+    map(str_remove_all, pattern = fixed("{")) %>%
+    unlist() %>%
+    # removing elements protected as other items
+    setdiff(c("p_miss", "p_nonmiss", "N_miss", "N_nonmiss", "N_obs"))
+
+  if (length(fns_names_chr) == 0) stop(glue(
+    "No summary function found in `{stat_display}` for variable '{variable}'.\n",
+    "Did you wrap the function name in curly brackets?"
+  ), call. = FALSE)
+
+  if (any(c("by", "variable") %in% fns_names_chr)) {
+    stop(paste(
+      "'by' and 'variable' are protected names, and continuous variables",
+      "cannot be summarized with functions by the these name."), call. = FALSE)
+  }
+
+  fns_names_chr
+}
+
+# adding_formatting_as_attr ----------------------------------------------------
+adding_formatting_as_attr <- function(df_stats, digits, fns_names_chr) {
   fmt_fun <- as.list(rep(digits, length.out = length(fns_names_chr))) %>%
     set_names(fns_names_chr)
 
@@ -924,9 +1061,95 @@ summarize_continuous <- function(data, variable, by, stat_display, digits) {
     }
   )
 
+  df_stats
+}
+
+# summarize_continuous for survey designs ---------------------------------------------------------
+summarize_continuous_survey <- function(data, variable, by, stat_display, digits) {
+  # extracting function calls
+  fns_names_chr <- extracting_function_calls_from_stat_display(stat_display, variable)
+
+  # preparing df_stats
+  if (is.null(by)) {
+    df_stats <- tibble(variable = variable)
+  } else {
+    df_stats <- tibble(by = df_by(data, by)[["by"]], variable = variable)
+  }
+
+  # calculating stats for each var and by level
+  for (f in fns_names_chr) {
+    suppressMessages(
+      df_stats <- df_stats %>%
+        left_join(compute_survey_stat(data, variable, by, f))
+    )
+  }
+
+  # adding formatting function as attr to summary statistics columns
+  df_stats <- adding_formatting_as_attr(df_stats, digits, fns_names_chr)
+
   # returning final object
   df_stats
 }
+
+#' @importFrom survey svymean svyvar svyquantile svyby
+compute_survey_stat <- function(data, variable, by, f) {
+  args <- list(
+    design = data,
+    na.rm = TRUE,
+    keep.var = FALSE
+  )
+  fun <- NULL
+  if (f == "mean") {
+    fun <- survey::svymean
+  }
+  if (f %in% c("var", "sd")) {
+    fun <- survey::svyvar
+  }
+  if (f == "median") {
+    fun <- survey::svyquantile
+    args$quantiles <- .5
+  }
+  if (f == "min") {
+    fun <- survey::svyquantile
+    args$quantiles <- 0
+  }
+  if (f == "max") {
+    fun <- survey::svyquantile
+    args$quantiles <- 1
+  }
+  if (f %in% paste0("p", 0:100)) {
+    fun <- survey::svyquantile
+    args$quantiles <- as.numeric(stringr::str_replace(f, pattern = "^p", "")) / 100
+  }
+
+  if (is.null(fun))
+    stop(paste0("'", f, "' statistic is not supported for survey objects."), call. = FALSE)
+
+  if (is.null(by)) {
+    args$x <- as.formula(paste("~", variable))
+    stat <- do.call(fun, args)
+    stat <- tibble(variable, stat[1]) %>%
+      set_names(c("variable", f))
+  } else {
+    args$formula <- as.formula(paste("~", variable))
+    args$by <- as.formula(paste("~", by))
+    args$FUN <- fun
+    stat <- do.call(svyby, args)
+    stat <- stat %>%
+      as_tibble() %>%
+      select(1:2) %>%
+      set_names(c("by", f)) %>%
+      mutate(variable = variable)
+  }
+
+  if (f == "sd")
+    stat$sd <- sqrt(stat$sd)
+
+  stat
+}
+
+
+
 
 # df_stats_to_tbl --------------------------------------------------------------
 df_stats_to_tbl <- function(data, variable, summary_type, by, var_label, stat_display,
@@ -1003,7 +1226,12 @@ df_stats_to_tbl <- function(data, variable, summary_type, by, var_label, stat_di
   }
 
   # add rows for missing -------------------------------------------------------
-  if (missing == "always" || (missing == "ifany" & sum(is.na(data[[variable]])) > 0)) {
+  if (is_survey(data)) {
+    na_in_data <- (sum(is.na(data$variables[[variable]])) > 0)
+  } else {
+    na_in_data <- (sum(is.na(data[[variable]])) > 0)
+  }
+  if (missing == "always" || (missing == "ifany" & na_in_data)) {
     result <-
       result %>%
       bind_rows(
@@ -1021,12 +1249,22 @@ df_stats_to_tbl <- function(data, variable, summary_type, by, var_label, stat_di
 # calculate_missing_row --------------------------------------------------------
 calculate_missing_row <- function(data, variable, by, missing_text) {
   # converting variable to TRUE/FALSE for missing
-  data <-
-    data %>%
-    select(c(variable, by)) %>%
-    mutate(
-      !!variable := is.na(.data[[variable]])
-    )
+  if (!is_survey(data)) {
+    data <-
+      data %>%
+      select(c(variable, by)) %>%
+      mutate(
+        !!variable := is.na(.data[[variable]])
+      )
+  } else { #survey
+    data$variables <-
+      data$variables %>%
+      select(c(variable, by)) %>%
+      mutate(
+        !!variable := is.na(.data[[variable]])
+      )
+  }
+
 
   # passing the T/F variable through the functions to format as we do in
   # the tbl_summary output
@@ -1063,15 +1301,41 @@ df_stats_fun <- function(summary_type, variable, class, dichotomous_value, sort,
                                           sort = sort, percent = percent)
   )
 
+  #survey
+  if (!is_survey(data)) {
+    data_is_na <- mutate_at(data, vars(all_of(variable)), is.na)
+  } else {
+    data_is_na <- data
+    # for svytable, we need to be sure that the factor has two levels
+    data_is_na$variables <- mutate_at(data$variables, vars(all_of(variable)), ~ factor(is.na(.), c(F, T)))
+  }
+
   # adding the N_obs and N_missing, etc
-  t2 <- summarize_categorical(data = mutate_at(data, vars(all_of(variable)), is.na),
+  t2 <- summarize_categorical(data = data_is_na,
                               variable = variable,
                               by = by, class = "logical",
                               dichotomous_value = TRUE,
                               sort = "alphanumeric", percent = percent) %>%
-    rename(p_miss = .data$p, N_obs = .data$N, N_miss = .data$n) %>%
+    rename(p_miss = .data$p, N_obs = .data$N, N_miss = .data$n)
+
+  if (is_survey(data)) {#survey
+    t2 <- t2 %>%
+      rename(
+        p_miss_unweighted = .data$p_unweighted,
+        N_obs_unweighted = .data$N_unweighted,
+        N_miss_unweighted = .data$n_unweighted
+      )
+  }
+
+  t2 <- t2 %>%
     mutate(N_nonmiss = .data$N_obs - .data$N_miss,
            p_nonmiss = 1 - .data$p_miss)
+
+  if (is_survey(data)) {# survey
+    t2 <- t2 %>%
+      mutate(N_nonmiss_unweighted = .data$N_obs_unweighted - .data$N_miss_unweighted,
+             p_nonmiss_unweighted = 1 - .data$p_miss_unweighted)
+  }
 
   # returning table will all stats
   merge_vars <- switch(!is.null(by), c("by", "variable")) %||% "variable"
@@ -1080,6 +1344,11 @@ df_stats_fun <- function(summary_type, variable, class, dichotomous_value, sort,
   # setting fmt_fun for percents and integers
   attr(return$p_nonmiss, "fmt_fun") <- attr(return$p_miss, "fmt_fun")
   attr(return$N_nonmiss, "fmt_fun") <- attr(return$N_miss, "fmt_fun")
+
+  if (is_survey(data)) {# survey
+    attr(return$p_nonmiss_unweighted, "fmt_fun") <- attr(return$p_miss_unweighted, "fmt_fun")
+    attr(return$N_nonmiss_unweighted, "fmt_fun") <- attr(return$N_miss_unweighted, "fmt_fun")
+  }
 
   return
 }

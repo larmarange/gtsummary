@@ -5,7 +5,7 @@
 #' \href{http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html}{tbl_summary vignette}
 #' for detailed examples.
 #'
-#' @param data A data frame
+#' @param data A data frame or a survey object created with [survey::svydesign()]
 #' @param by A column name (quoted or unquoted) in `data`.
 #' Summary statistics will be calculated separately for each level of the `by`
 #' variable (e.g. `by = trt`). If `NULL`, summary statistics
@@ -91,6 +91,14 @@
 #'   \item `{foo}` any function of the form `foo(x)` is accepted where `x` is a numeric vector
 #' }
 #'
+#' For survey objects, custom `{foo}` function is not supported. For categorical variables,
+#' you can also use the following statistics:
+#' \itemize{
+#'   \item `{n_unweighted}` unweighted frequency
+#'   \item `{N_unweighted}` unweighted denominator
+#'   \item `{p_unweighted}` unweighted formatted percentage
+#' }
+#'
 #' For both categorical and continuous variables, statistics on the number of
 #' missing and non-missing observations and their proportions are available to
 #' display.
@@ -105,6 +113,11 @@
 #' Note that for categorical variables, `{N_obs}`, `{N_miss}` and `{N_nonmiss}` refer
 #' to the total number, number missing and number non missing observations
 #' in the denominator, not at each level of the categorical variable.
+#'
+#' Note that for survey objects, `{N_obs}`, `{N_miss}` and `{N_nonmiss}` take into
+#' account survey weights. You also have unweighted versions: `{N_obs_unweighted}`,
+#' `{N_miss_unweighted}`, `{N_nonmiss_unweighted}`, `{p_miss_unweighted}` and
+#' `{p_nonmiss_unweighted}`.
 #'
 #' @section type argument:
 #' tbl_summary displays summary statistics for three types of data:
@@ -147,6 +160,12 @@
 #'     by = trt,
 #'     label = list(age = "Patient Age")
 #'   )
+#'
+#' # Example 4 with weights --------------------
+#' d <- survey::svydesign(~1, data = as.data.frame(Titanic), weights = ~Freq)
+#' tbl_summary(d, by = "Survived", include = -Freq, percent = "row")
+#'
+#'
 #' @section Example Output:
 #' \if{html}{Example 1}
 #'
@@ -165,7 +184,7 @@ tbl_summary <- function(data, by = NULL, label = NULL, statistic = NULL,
                         missing = NULL, missing_text = NULL, sort = NULL,
                         percent = NULL, include = everything(), group = NULL) {
   # eval -----------------------------------------------------------------------
-  include <- select(data, {{ include }}) %>% names()
+  include <- select(raw_data(data), {{ include }}) %>% names()
 
   # setting defaults from gtsummary theme --------------------------------------
   label <- label %||% get_theme_element("tbl_summary-arg:label")
@@ -181,10 +200,12 @@ tbl_summary <- function(data, by = NULL, label = NULL, statistic = NULL,
   percent <- percent %||% get_theme_element("tbl_summary-arg:percent",
                                             default = "column")
   # ungrouping data ------------------------------------------------------------
-  data <- data %>% ungroup()
+  if (!is_survey(data)) {
+    data <- data %>% ungroup()
+  }
 
   # converting bare arguments to string ----------------------------------------
-  by <- var_input_to_string(data = data, select_input = !!rlang::enquo(by),
+  by <- var_input_to_string(data = raw_data(data), select_input = !!rlang::enquo(by),
                             arg_name = "by", select_single = TRUE)
 
   # matching arguments ---------------------------------------------------------
@@ -195,26 +216,40 @@ tbl_summary <- function(data, by = NULL, label = NULL, statistic = NULL,
   tbl_summary_data_checks(data)
 
   # removing orderered class from factor by variables --------------------------
-  if (!is.null(by) && inherits(data[[by]], "ordered") && inherits(data[[by]], "factor")) {
-    data[[by]] <- factor(data[[by]], ordered = FALSE)
+  if (!is_survey(data)) {
+    if (!is.null(by) && inherits(data[[by]], "ordered") && inherits(data[[by]], "factor")) {
+      data[[by]] <- factor(data[[by]], ordered = FALSE)
+    }
+  } else {
+    if (!is.null(by) && inherits(data$variables[[by]], "ordered") && inherits(data$variables[[by]], "factor")) {
+      data$variables[[by]] <- factor(data$variables[[by]], ordered = FALSE)
+    }
   }
 
   # deleting obs with missing by values ----------------------------------------
-  # saving variable labels
-  if (!is.null(by) && sum(is.na(data[[by]])) > 0) {
+  if (!is.null(by) && sum(is.na(raw_data(data)[[by]])) > 0) {
     message(glue(
-      "{sum(is.na(data[[by]]))} observations missing `{by}` have been removed. ",
+      "{sum(is.na(raw_data(data)[[by]]))} observations missing `{by}` have been removed. ",
       "To include these observations, use `forcats::fct_explicit_na()` on `{by}` ",
       "column before passing to `tbl_summary()`."
     ))
-    lbls <- purrr::map(data, ~ attr(.x, "label"))
-    data <- data[!is.na(data[[by]]), ]
-
-    # re-applying labels---I think this will NOT be necessary after dplyr 0.9.0
-    for (i in names(lbls)) {
-      attr(data[[i]], "label") <- lbls[[i]]
+    if (!is_survey(data)) {
+      # saving variable labels
+      lbls <- purrr::map(data, ~ attr(.x, "label"))
+      data <- data[!is.na(data[[by]]), ]
+      # re-applying labels---I think this will NOT be necessary after dplyr 0.9.0
+      for (i in names(lbls)) {
+        attr(data[[i]], "label") <- lbls[[i]]
+      }
+    } else {
+      # saving variable labels
+      lbls <- purrr::map(data$variables, ~ attr(.x, "label"))
+      data <- data[!is.na(data$variables[[by]]), ]
+      # re-applying labels---I think this will NOT be necessary after dplyr 0.9.0
+      for (i in names(lbls)) {
+        attr(data$variables[[i]], "label") <- lbls[[i]]
+      }
     }
-
     rm(lbls, i)
   }
 
@@ -232,20 +267,8 @@ tbl_summary <- function(data, by = NULL, label = NULL, statistic = NULL,
   tbl_summary_inputs <- as.list(environment())
 
   # removing variables with unsupported variable types from data ---------------
-  data <- select(data, !!include)
   classes_expected <- c("character", "factor", "numeric", "logical", "integer", "difftime")
-  var_to_remove <-
-    map_lgl(data, ~ class(.x) %in% classes_expected %>% any()) %>%
-    discard(. == TRUE) %>%
-    names()
-  data <- select(data, -var_to_remove)
-  if (length(var_to_remove) > 0) {
-    message(glue(
-      "Column(s) {glue_collapse(paste(sQuote(var_to_remove)), sep = ', ', last = ', and ')} ",
-      "omitted from output.\n",
-      "Accepted classes are {glue_collapse(paste(sQuote(classes_expected)), sep = ', ', last = ', or ')}."
-    ))
-  }
+  data <- removing_variables_with_unsupported_types(data, include, classes_expected)
 
   # checking function inputs ---------------------------------------------------
   tbl_summary_input_checks(
@@ -258,7 +281,7 @@ tbl_summary <- function(data, by = NULL, label = NULL, statistic = NULL,
 
   # creating a table with meta data about each variable ------------------------
   meta_data <- tibble(
-    variable = names(data),
+    variable = names(raw_data(data)),
     # assigning class, if entire var is NA, then assigning class NA
     class = assign_class(data, .data$variable, classes_expected),
     # assigning our best guess of the type, the final type is assigned below
@@ -298,12 +321,12 @@ tbl_summary <- function(data, by = NULL, label = NULL, statistic = NULL,
   meta_data <-
     meta_data %>%
     mutate(
-      dichotomous_value = assign_dichotomous_value(data, .data$variable, .data$summary_type, .data$class, value),
-      var_label = assign_var_label(data, .data$variable, label),
+      dichotomous_value = assign_dichotomous_value(raw_data(data), .data$variable, .data$summary_type, .data$class, value),
+      var_label = assign_var_label(raw_data(data), .data$variable, label),
       stat_display = assign_stat_display(.data$variable, .data$summary_type, statistic),
       stat_label = stat_label_match(.data$stat_display),
       digits = continuous_digits_guess(
-        data, .data$variable, .data$summary_type, .data$class, digits
+        raw_data(data), .data$variable, .data$summary_type, .data$class, digits
       ),
       sort = assign_sort(.data$variable, .data$summary_type, sort),
       df_stats = pmap(
@@ -376,4 +399,28 @@ tbl_summary <- function(data, by = NULL, label = NULL, statistic = NULL,
   }
 
   return(results)
+}
+
+
+# removing variables with unsupported variable types from data ---------------
+removing_variables_with_unsupported_types <- function(data, include, classes_expected) {
+  if (is_survey(data)) {
+    data$variables <- removing_variables_with_unsupported_types(data$variables, include, classes_expected)
+    return(data)
+  }
+
+  data <- select(data, !!include)
+  var_to_remove <-
+    map_lgl(data, ~ class(.x) %in% classes_expected %>% any()) %>%
+    discard(. == TRUE) %>%
+    names()
+  data <- select(data, -var_to_remove)
+  if (length(var_to_remove) > 0) {
+    message(glue(
+      "Column(s) {glue_collapse(paste(sQuote(var_to_remove)), sep = ', ', last = ', and ')} ",
+      "omitted from output.\n",
+      "Accepted classes are {glue_collapse(paste(sQuote(classes_expected)), sep = ', ', last = ', or ')}."
+    ))
+  }
+  data
 }

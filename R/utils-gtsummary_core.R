@@ -259,6 +259,8 @@ modify_header_internal <- function(x, stat_by = NULL, ...,
 
 tidyselect_to_list <- function(.data, x, .meta_data = NULL,
                                arg_name = NULL, select_single = FALSE) {
+  .data <- raw_data(.data)
+
   # if NULL provided, return NULL ----------------------------------------------
   if (is.null(x)) {
     return(NULL)
@@ -376,7 +378,6 @@ tidyselect_to_list <- function(.data, x, .meta_data = NULL,
 #' var_input_to_string(mtcars, select_input = c(everything(), -mpg))
 var_input_to_string <- function(data, meta_data = NULL, arg_name = NULL,
                                 select_single = FALSE, select_input) {
-
   select_input <- rlang::enquo(select_input)
   # if NULL passed, return NULL
   if (rlang::quo_is_null(select_input)) {

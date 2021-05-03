@@ -54,7 +54,7 @@
 
 <meta property="og:title" content="Add statistic labels — add_stat_label" />
 <meta property="og:description" content="Adds labels describing the summary statistics presented for
-each variable in the tbl_summary table." />
+each variable in the tbl_summary / tbl_svysummary table." />
 <meta property="og:image" content="http://www.danieldsjoberg.com/gtsummary/logo.png" />
 
 
@@ -97,7 +97,7 @@ each variable in the tbl_summary table." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtsummary</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.3.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.4.0.9002</span>
       </span>
     </div>
 
@@ -105,7 +105,7 @@ each variable in the tbl_summary table." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
@@ -146,7 +146,7 @@ each variable in the tbl_summary table." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/ddsjoberg/gtsummary">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -176,17 +176,18 @@ each variable in the tbl_summary table." />
 
     <div class="ref-description">
     <p>Adds labels describing the summary statistics presented for
-each variable in the <a href='http://www.danieldsjoberg.com/gtsummary//reference/tbl_summary.html'>tbl_summary</a> table.</p>
+each variable in the <a href='tbl_summary.html'>tbl_summary</a> / <a href='tbl_svysummary.html'>tbl_svysummary</a> table.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='http://www.danieldsjoberg.com/gtsummary//reference/add_stat_label.html'>add_stat_label</a></span>(<span class='kw'>x</span>, location = <span class='kw'>NULL</span>, label = <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>add_stat_label</span><span class='op'>(</span><span class='va'>x</span>, location <span class='op'>=</span> <span class='cn'>NULL</span>, label <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Object with class <code>tbl_summary</code> from the <a href='http://www.danieldsjoberg.com/gtsummary//reference/tbl_summary.html'>tbl_summary</a> function</p></td>
+      <td><p>Object with class <code>tbl_summary</code> from the <a href='tbl_summary.html'>tbl_summary</a> function
+or with class <code>tbl_svysummary</code> from the <a href='tbl_svysummary.html'>tbl_svysummary</a> function</p></td>
     </tr>
     <tr>
       <th>location</th>
@@ -203,7 +204,28 @@ label, e.g. <code>label = all_categorical() ~ "No. (%)"</code></p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>tbl_summary</code> object</p>
+    <p>A <code>tbl_summary</code> or <code>tbl_svysummary</code> object</p>
+    <h2 class="hasAnchor" id="tips"><a class="anchor" href="#tips"></a>Tips</h2>
+
+    
+
+
+<p>When using <code>add_stat_label(location='row')</code> with subsequent <code><a href='tbl_merge.html'>tbl_merge()</a></code>,
+it's important to have somewhat of an understanding of the underlying
+structure of the gtsummary table.
+<code>add_stat_label(location='row')</code> works by adding a new column called
+<code>"stat_label"</code> to <code>x$table_body</code>. The <code>"label"</code> and <code>"stat_label"</code>
+columns are merged when the gtsummary table is printed.
+The <code><a href='tbl_merge.html'>tbl_merge()</a></code> function merges on the <code>"label"</code> column (among others),
+which is typically the first column you see in a gtsummary table.
+Therefore, when you want to merge a table that has run <code>add_stat_label(location='row')</code>
+you need to match the <code>"label"</code> column values before the <code>"stat_column"</code>
+is merged with it.</p>
+<p>For example, the following two tables merge properly<div class="r"></p><pre><span class='va'>tbl1</span> <span class='op'>&lt;-</span> <span class='va'>trial</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>age</span>, <span class='va'>grade</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='tbl_summary.html'>tbl_summary</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>add_stat_label</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>tbl2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>marker</span> <span class='op'>~</span> <span class='va'>age</span> <span class='op'>+</span> <span class='va'>grade</span>, <span class='va'>trial</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='tbl_regression.html'>tbl_regression</a></span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='fu'><a href='tbl_merge.html'>tbl_merge</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>tbl1</span>, <span class='va'>tbl2</span><span class='op'>)</span><span class='op'>)</span>
+</pre><p></div></p>
     <h2 class="hasAnchor" id="example-output"><a class="anchor" href="#example-output"></a>Example Output</h2>
 
     
@@ -212,47 +234,67 @@ label, e.g. <code>label = all_categorical() ~ "No. (%)"</code></p></td>
 <p><img src='figures/add_stat_label_ex1.png' width=60% /></p>
 <p>Example 2</p>
 <p><img src='figures/add_stat_label_ex2.png' width=60% /></p>
+<p>Example 3</p>
+<p><img src='figures/add_stat_label_ex3.png' width=45% /></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other tbl_summary tools: 
-<code><a href='http://www.danieldsjoberg.com/gtsummary//reference/add_n.html'>add_n</a>()</code>,
-<code><a href='http://www.danieldsjoberg.com/gtsummary//reference/add_overall.html'>add_overall</a>()</code>,
-<code><a href='http://www.danieldsjoberg.com/gtsummary//reference/add_p.tbl_summary.html'>add_p.tbl_summary</a>()</code>,
-<code><a href='http://www.danieldsjoberg.com/gtsummary//reference/add_q.html'>add_q</a>()</code>,
-<code><a href='http://www.danieldsjoberg.com/gtsummary//reference/bold_italicize_labels_levels.html'>bold_italicize_labels_levels</a></code>,
-<code><a href='http://www.danieldsjoberg.com/gtsummary//reference/inline_text.tbl_summary.html'>inline_text.tbl_summary</a>()</code>,
-<code><a href='http://www.danieldsjoberg.com/gtsummary//reference/inline_text.tbl_survfit.html'>inline_text.tbl_survfit</a>()</code>,
-<code><a href='http://www.danieldsjoberg.com/gtsummary//reference/modify_footnote.html'>modify_footnote</a>()</code>,
-<code><a href='http://www.danieldsjoberg.com/gtsummary//reference/modify_header.html'>modify_header</a>()</code>,
-<code><a href='http://www.danieldsjoberg.com/gtsummary//reference/modify_spanning_header.html'>modify_spanning_header</a>()</code>,
-<code><a href='http://www.danieldsjoberg.com/gtsummary//reference/tbl_merge.html'>tbl_merge</a>()</code>,
-<code><a href='http://www.danieldsjoberg.com/gtsummary//reference/tbl_stack.html'>tbl_stack</a>()</code>,
-<code><a href='http://www.danieldsjoberg.com/gtsummary//reference/tbl_summary.html'>tbl_summary</a>()</code></p></div>
+<code><a href='add_n.tbl_summary.html'>add_n.tbl_summary</a>()</code>,
+<code><a href='add_overall.html'>add_overall</a>()</code>,
+<code><a href='add_p.tbl_summary.html'>add_p.tbl_summary</a>()</code>,
+<code><a href='add_q.html'>add_q</a>()</code>,
+<code><a href='bold_italicize_labels_levels.html'>bold_italicize_labels_levels</a></code>,
+<code><a href='inline_text.tbl_summary.html'>inline_text.tbl_summary</a>()</code>,
+<code><a href='inline_text.tbl_survfit.html'>inline_text.tbl_survfit</a>()</code>,
+<code><a href='modify.html'>modify</a></code>,
+<code><a href='tbl_merge.html'>tbl_merge</a>()</code>,
+<code><a href='tbl_stack.html'>tbl_stack</a>()</code>,
+<code><a href='tbl_summary.html'>tbl_summary</a>()</code></p>
+<p>Other tbl_svysummary tools: 
+<code><a href='add_n.tbl_summary.html'>add_n.tbl_summary</a>()</code>,
+<code><a href='add_overall.html'>add_overall</a>()</code>,
+<code><a href='add_p.tbl_svysummary.html'>add_p.tbl_svysummary</a>()</code>,
+<code><a href='add_q.html'>add_q</a>()</code>,
+<code><a href='modify.html'>modify</a></code>,
+<code><a href='tbl_merge.html'>tbl_merge</a>()</code>,
+<code><a href='tbl_stack.html'>tbl_stack</a>()</code>,
+<code><a href='tbl_svysummary.html'>tbl_svysummary</a>()</code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Daniel D. Sjoberg</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>tbl</span> <span class='op'>&lt;-</span> <span class='kw'>trial</span> <span class='op'>%&gt;%</span>
-  <span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='kw'>trt</span>, <span class='kw'>age</span>, <span class='kw'>grade</span>, <span class='kw'>response</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='http://www.danieldsjoberg.com/gtsummary//reference/tbl_summary.html'>tbl_summary</a></span>(by = <span class='kw'>trt</span>)
+    <pre class="examples"><div class='input'><span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='va'>trial</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>trt</span>, <span class='va'>age</span>, <span class='va'>grade</span>, <span class='va'>response</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='tbl_summary.html'>tbl_summary</a></span><span class='op'>(</span>by <span class='op'>=</span> <span class='va'>trt</span><span class='op'>)</span>
 
 <span class='co'># Example 1 ----------------------------------</span>
 <span class='co'># Add statistic presented to the variable label row</span>
-<span class='kw'>add_stat_label_ex1</span> <span class='op'>&lt;-</span>
-  <span class='kw'>tbl</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='http://www.danieldsjoberg.com/gtsummary//reference/add_stat_label.html'>add_stat_label</a></span>(
+<span class='va'>add_stat_label_ex1</span> <span class='op'>&lt;-</span>
+  <span class='va'>tbl</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>add_stat_label</span><span class='op'>(</span>
     <span class='co'># update default statistic label for continuous variables</span>
-    label = <span class='fu'><a href='http://www.danieldsjoberg.com/gtsummary//reference/select_helpers.html'>all_continuous</a></span>() <span class='op'>~</span> <span class='st'>"med. (iqr)"</span>
-  )
+    label <span class='op'>=</span> <span class='fu'><a href='select_helpers.html'>all_continuous</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>~</span> <span class='st'>"med. (iqr)"</span>
+  <span class='op'>)</span>
 
 <span class='co'># Example 2 ----------------------------------</span>
-<span class='kw'>add_stat_label_ex2</span> <span class='op'>&lt;-</span>
-  <span class='kw'>tbl</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='http://www.danieldsjoberg.com/gtsummary//reference/add_stat_label.html'>add_stat_label</a></span>(
+<span class='va'>add_stat_label_ex2</span> <span class='op'>&lt;-</span>
+  <span class='va'>tbl</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>add_stat_label</span><span class='op'>(</span>
     <span class='co'># add a new column with statistic labels</span>
-    location = <span class='st'>"column"</span>
-  )
+    location <span class='op'>=</span> <span class='st'>"column"</span>
+  <span class='op'>)</span>
+
+<span class='co'># Example 3 ----------------------------------</span>
+<span class='va'>add_stat_label_ex3</span> <span class='op'>&lt;-</span>
+  <span class='va'>trial</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>age</span>, <span class='va'>grade</span>, <span class='va'>trt</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='tbl_summary.html'>tbl_summary</a></span><span class='op'>(</span>
+    by <span class='op'>=</span> <span class='va'>trt</span>,
+    type <span class='op'>=</span> <span class='fu'><a href='select_helpers.html'>all_continuous</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>~</span> <span class='st'>"continuous2"</span>,
+    statistic <span class='op'>=</span> <span class='fu'><a href='select_helpers.html'>all_continuous</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"{mean} ({sd})"</span>, <span class='st'>"{min} - {max}"</span><span class='op'>)</span>,
+  <span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>add_stat_label</span><span class='op'>(</span>label <span class='op'>=</span> <span class='va'>age</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Mean (SD)"</span>, <span class='st'>"Min - Max"</span><span class='op'>)</span><span class='op'>)</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -265,11 +307,11 @@ label, e.g. <code>label = all_categorical() ~ "No. (%)"</code></p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='http://www.danieldsjoberg.com/'>Daniel D. Sjoberg</a>, <a href='http://margarethannum.github.io/'>Margie Hannum</a>, Karissa Whiting, <a href='http://www.emilyzabor.com/'>Emily C. Zabor</a>.</p>
+  <p>Developed by <a href='http://www.danieldsjoberg.com/'>Daniel D. Sjoberg</a>, Michael Curry, <a href='http://margarethannum.github.io/'>Margie Hannum</a>, Joseph Larmarange, Karissa Whiting, <a href='http://www.emilyzabor.com/'>Emily C. Zabor</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

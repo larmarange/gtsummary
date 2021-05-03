@@ -95,7 +95,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtsummary</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.3.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.4.0.9002</span>
       </span>
     </div>
 
@@ -103,7 +103,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
@@ -144,7 +144,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/ddsjoberg/gtsummary">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -227,7 +227,13 @@ multiple comparisons</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="add_n.html">add_n()</a></code> </p>
+          <p><code><a href="add_difference.html">add_difference()</a></code> </p>
+        </td>
+        <td><p>Add difference between groups</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_n.tbl_summary.html">add_n(<i>&lt;tbl_summary&gt;</i>)</a></code> <code><a href="add_n.tbl_summary.html">add_n(<i>&lt;tbl_svysummary&gt;</i>)</a></code> </p>
         </td>
         <td><p>Add column with N</p></td>
       </tr><tr>
@@ -286,6 +292,87 @@ multiple comparisons</p></td>
           <p><code><a href="tbl_survfit.html">tbl_survfit()</a></code> </p>
         </td>
         <td><p>Creates table of survival probabilities</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_p.tbl_survfit.html">add_p(<i>&lt;tbl_survfit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Adds p-value to survfit table</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_n.tbl_survfit.html">add_n(<i>&lt;tbl_survfit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Add column with number of observations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_nevent.tbl_survfit.html">add_nevent(<i>&lt;tbl_survfit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Add column with number of observed events</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_q.html">add_q()</a></code> </p>
+        </td>
+        <td><p>Add a column of q-values to account for
+multiple comparisons</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-survey-design-summary-tables" class="hasAnchor"><a href="#section-survey-design-summary-tables" class="anchor"></a>Survey Design Summary Tables</h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="tbl_svysummary.html">tbl_svysummary()</a></code> </p>
+        </td>
+        <td><p>Create a table of summary statistics from a survey object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_p.tbl_svysummary.html">add_p(<i>&lt;tbl_svysummary&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Adds p-values to svysummary tables</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_q.html">add_q()</a></code> </p>
+        </td>
+        <td><p>Add a column of q-values to account for
+multiple comparisons</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_overall.html">add_overall()</a></code> </p>
+        </td>
+        <td><p>Add column with overall summary statistics</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_n.tbl_summary.html">add_n(<i>&lt;tbl_summary&gt;</i>)</a></code> <code><a href="add_n.tbl_summary.html">add_n(<i>&lt;tbl_svysummary&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Add column with N</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_stat_label.html">add_stat_label()</a></code> </p>
+        </td>
+        <td><p>Add statistic labels</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_stat.html">add_stat()</a></code> </p>
+        </td>
+        <td><p>Add a custom statistic column</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -314,15 +401,33 @@ multiple comparisons</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="add_global_p.tbl_regression.html">add_global_p(<i>&lt;tbl_regression&gt;</i>)</a></code> </p>
+          <p><code><a href="add_global_p.html">add_global_p()</a></code> </p>
         </td>
-        <td><p>Adds the global p-value for categorical variables</p></td>
+        <td><p>Add the global p-values</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="add_global_p.tbl_uvregression.html">add_global_p(<i>&lt;tbl_uvregression&gt;</i>)</a></code> </p>
+          <p><code><a href="add_n_regression.html">add_n(<i>&lt;tbl_regression&gt;</i>)</a></code> <code><a href="add_n_regression.html">add_n(<i>&lt;tbl_uvregression&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Adds the global p-value for categorical variables</p></td>
+        <td><p>Add N to regression table</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_nevent_regression.html">add_nevent(<i>&lt;tbl_regression&gt;</i>)</a></code> <code><a href="add_nevent_regression.html">add_nevent(<i>&lt;tbl_uvregression&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Add event N to regression table</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="combine_terms.html">combine_terms()</a></code> </p>
+        </td>
+        <td><p>Combine terms in a regression model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_glance.html">add_glance_table()</a></code> <code><a href="add_glance.html">add_glance_source_note()</a></code> </p>
+        </td>
+        <td><p>Add Model Statistics</p></td>
       </tr><tr>
         
         <td>
@@ -333,21 +438,21 @@ multiple comparisons</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="add_nevent.tbl_regression.html">add_nevent(<i>&lt;tbl_regression&gt;</i>)</a></code> </p>
+          <p><code><a href="add_significance_stars.html">add_significance_stars()</a></code> </p>
         </td>
-        <td><p>Add number of events to a regression table</p></td>
+        <td><p>Add significance stars</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="add_nevent.tbl_uvregression.html">add_nevent(<i>&lt;tbl_uvregression&gt;</i>)</a></code> </p>
+          <p><code><a href="add_vif.html">add_vif()</a></code> </p>
         </td>
-        <td><p>Add number of events to a regression table</p></td>
+        <td><p>Add Variance Inflation Factor</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="combine_terms.html">combine_terms()</a></code> </p>
+          <p><code><a href="plot.html">plot(<i>&lt;tbl_regression&gt;</i>)</a></code> <code><a href="plot.html">plot(<i>&lt;tbl_uvregression&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Combine terms in a regression model</p></td>
+        <td><p>Plot Regression Coefficients</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -364,7 +469,7 @@ multiple comparisons</p></td>
       <tr>
         
         <td>
-          <p><code><a href="inline_text.tbl_summary.html">inline_text(<i>&lt;tbl_summary&gt;</i>)</a></code> </p>
+          <p><code><a href="inline_text.tbl_summary.html">inline_text(<i>&lt;tbl_summary&gt;</i>)</a></code> <code><a href="inline_text.tbl_summary.html">inline_text(<i>&lt;tbl_svysummary&gt;</i>)</a></code> </p>
         </td>
         <td><p>Report statistics from summary tables inline</p></td>
       </tr><tr>
@@ -413,21 +518,27 @@ multiple comparisons</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="as_flex_table.html">as_flex_table()</a></code> </p>
+        </td>
+        <td><p>Convert gtsummary object to a flextable object</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="as_kable.html">as_kable()</a></code> </p>
         </td>
         <td><p>Convert gtsummary object to a kable object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="as_flextable.html">as_flextable()</a></code> </p>
-        </td>
-        <td><p>Convert gtsummary object to a flextable object</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="as_kable_extra.html">as_kable_extra()</a></code> </p>
         </td>
         <td><p>Convert gtsummary object to a kableExtra object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="as_hux_table.html">as_hux_table()</a></code> </p>
+        </td>
+        <td><p>Convert gtsummary object to a huxtable object</p></td>
       </tr><tr>
         
         <td>
@@ -448,7 +559,7 @@ multiple comparisons</p></td>
       
       <tr>
         <th colspan="2">
-          <h3 id="section-stack-or-merge-summary-tables" class="hasAnchor"><a href="#section-stack-or-merge-summary-tables" class="anchor"></a>Stack or Merge Summary Tables</h3>
+          <h3 id="section-merge-stack-or-stratify-summary-tables" class="hasAnchor"><a href="#section-merge-stack-or-stratify-summary-tables" class="anchor"></a>Merge, Stack, or Stratify Summary Tables</h3>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -468,6 +579,12 @@ multiple comparisons</p></td>
           <p><code><a href="tbl_stack.html">tbl_stack()</a></code> </p>
         </td>
         <td><p>Stacks two or more gtsummary objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tbl_strata.html">tbl_strata()</a></code> </p>
+        </td>
+        <td><p>Stratified gtsummary tables</p></td>
       </tr>
     </tbody><tbody>
       
@@ -484,21 +601,9 @@ multiple comparisons</p></td>
       <tr>
         
         <td>
-          <p><code><a href="modify_header.html">modify_header()</a></code> </p>
+          <p><code><a href="modify.html">modify_header()</a></code> <code><a href="modify.html">modify_footnote()</a></code> <code><a href="modify.html">modify_spanning_header()</a></code> <code><a href="modify.html">modify_caption()</a></code> <code><a href="modify.html">show_header_names()</a></code> </p>
         </td>
-        <td><p>Modify column headers in gtsummary tables</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="modify_footnote.html">modify_footnote()</a></code> </p>
-        </td>
-        <td><p>Update gtsummary table footnote</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="modify_spanning_header.html">modify_spanning_header()</a></code> </p>
-        </td>
-        <td><p>Update gtsummary table spanning header</p></td>
+        <td><p>Modify column headers, footnotes, spanning headers, and table captions</p></td>
       </tr><tr>
         
         <td>
@@ -514,9 +619,15 @@ multiple comparisons</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="sort_p.html">sort_p()</a></code> </p>
+          <p><code><a href="sort_filter_p.html">sort_p()</a></code> <code><a href="sort_filter_p.html">filter_p()</a></code> </p>
         </td>
-        <td><p>Sort variables in table by ascending p-values</p></td>
+        <td><p>Sort and filter variables in table by p-values</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="remove_row_type.html">remove_row_type()</a></code> </p>
+        </td>
+        <td><p>Remove rows by type</p></td>
       </tr>
     </tbody><tbody>
       
@@ -535,25 +646,31 @@ multiple comparisons</p></td>
         <td>
           <p><code><a href="style_percent.html">style_percent()</a></code> </p>
         </td>
-        <td><p>Style percentages to be displayed in tables or text</p></td>
+        <td><p>Style percentages</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="style_pvalue.html">style_pvalue()</a></code> </p>
         </td>
-        <td><p>Style p-values to be displayed in tables or text</p></td>
+        <td><p>Style p-values</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="style_sigfig.html">style_sigfig()</a></code> </p>
         </td>
-        <td><p>Implement significant figure-like rounding</p></td>
+        <td><p>Style significant figure-like rounding</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="style_ratio.html">style_ratio()</a></code> </p>
         </td>
-        <td><p>Implement significant figure-like rounding for ratios</p></td>
+        <td><p>Style significant figure-like rounding for ratios</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="style_number.html">style_number()</a></code> </p>
+        </td>
+        <td><p>Style numbers</p></td>
       </tr>
     </tbody><tbody>
       
@@ -576,9 +693,46 @@ multiple comparisons</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="theme_gtsummary.html">theme_gtsummary_journal()</a></code> <code><a href="theme_gtsummary.html">theme_gtsummary_compact()</a></code> <code><a href="theme_gtsummary.html">theme_gtsummary_printer()</a></code> </p>
+          <p><code><a href="theme_gtsummary.html">theme_gtsummary_journal()</a></code> <code><a href="theme_gtsummary.html">theme_gtsummary_compact()</a></code> <code><a href="theme_gtsummary.html">theme_gtsummary_printer()</a></code> <code><a href="theme_gtsummary.html">theme_gtsummary_language()</a></code> <code><a href="theme_gtsummary.html">theme_gtsummary_continuous2()</a></code> <code><a href="theme_gtsummary.html">theme_gtsummary_mean_sd()</a></code> <code><a href="theme_gtsummary.html">theme_gtsummary_eda()</a></code> </p>
         </td>
         <td><p>Available gtsummary themes</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-advanced-modifiers" class="hasAnchor"><a href="#section-advanced-modifiers" class="anchor"></a>Advanced modifiers</h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="modify_table_styling.html">modify_table_styling()</a></code> </p>
+        </td>
+        <td><p>Modify Table Styling</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="modify_table_body.html">modify_table_body()</a></code> </p>
+        </td>
+        <td><p>Modify Table Body</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="modify_column_hide.html">modify_column_hide()</a></code> <code><a href="modify_column_hide.html">modify_column_unhide()</a></code> </p>
+        </td>
+        <td><p>Modify Hidden Columns</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="modify_fmt_fun.html">modify_fmt_fun()</a></code> </p>
+        </td>
+        <td><p>Modify Formatting Functions</p></td>
       </tr>
     </tbody><tbody>
       
@@ -595,9 +749,28 @@ multiple comparisons</p></td>
       <tr>
         
         <td>
-          <p><code><a href="select_helpers.html">all_continuous()</a></code> <code><a href="select_helpers.html">all_categorical()</a></code> <code><a href="select_helpers.html">all_dichotomous()</a></code> <code><a href="select_helpers.html">all_numeric()</a></code> <code><a href="select_helpers.html">all_character()</a></code> <code><a href="select_helpers.html">all_integer()</a></code> <code><a href="select_helpers.html">all_double()</a></code> <code><a href="select_helpers.html">all_logical()</a></code> <code><a href="select_helpers.html">all_factor()</a></code> </p>
+          <p><code><a href="select_helpers.html">all_continuous()</a></code> <code><a href="select_helpers.html">all_continuous2()</a></code> <code><a href="select_helpers.html">all_categorical()</a></code> <code><a href="select_helpers.html">all_dichotomous()</a></code> <code><a href="select_helpers.html">all_tests()</a></code> <code><a href="select_helpers.html">all_stat_cols()</a></code> <code><a href="select_helpers.html">all_interaction()</a></code> <code><a href="select_helpers.html">all_intercepts()</a></code> <code><a href="select_helpers.html">all_contrasts()</a></code> </p>
         </td>
         <td><p>Select helper functions</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-custom-tidiers" class="hasAnchor"><a href="#section-custom-tidiers" class="anchor"></a>Custom Tidiers</h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="custom_tidiers.html">tidy_standardize()</a></code> <code><a href="custom_tidiers.html">tidy_bootstrap()</a></code> <code><a href="custom_tidiers.html">pool_and_tidy_mice()</a></code> <code><a href="custom_tidiers.html">tidy_gam()</a></code> </p>
+        </td>
+        <td><p>Collection of custom tidiers</p></td>
       </tr>
     </tbody><tbody>
       
@@ -632,11 +805,11 @@ multiple comparisons</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='http://www.danieldsjoberg.com/'>Daniel D. Sjoberg</a>, <a href='http://margarethannum.github.io/'>Margie Hannum</a>, Karissa Whiting, <a href='http://www.emilyzabor.com/'>Emily C. Zabor</a>.</p>
+  <p>Developed by <a href='http://www.danieldsjoberg.com/'>Daniel D. Sjoberg</a>, Michael Curry, <a href='http://margarethannum.github.io/'>Margie Hannum</a>, Joseph Larmarange, Karissa Whiting, <a href='http://www.emilyzabor.com/'>Emily C. Zabor</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

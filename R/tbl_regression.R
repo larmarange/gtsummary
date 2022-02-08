@@ -188,6 +188,8 @@ tbl_regression.default <- function(x, label = NULL, exponentiate = FALSE,
   # adding character CI
   if (all(c("conf.low", "conf.high") %in% names(table_body))) {
     ci.sep <- get_theme_element("pkgwide-str:ci.sep", default = ", ")
+    print(glue("ci.sep = '{ci.sep}'"))
+    print(table_body %>% select(variable, row_type, var_label, reference_row, label, estimate, conf.low, conf.high))
     table_body <-
       table_body %>%
       mutate( # adding character CI

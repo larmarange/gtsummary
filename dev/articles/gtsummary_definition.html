@@ -49,7 +49,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtsummary</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.5.2.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.6.2.9004</span>
       </span>
     </div>
 
@@ -65,7 +65,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -87,7 +87,10 @@
       <a href="../articles/themes.html">gtsummary + themes</a>
     </li>
     <li>
-      <a href="../articles/gallery.html">table gallery</a>
+      <a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/gtsummary.pdf" class="external-link">cheat sheet</a>
+    </li>
+    <li>
+      <a href="../articles/gallery.html">FAQ + gallery</a>
     </li>
   </ul>
 </li>
@@ -118,7 +121,7 @@
 
       
 
-      </header><script src="gtsummary_definition_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Definition of a gtsummary Object</h1>
@@ -131,60 +134,83 @@
 
     
     
-<p>This vignette is meant for those who wish to contribute to {gtsummary}, or users who wish to gain an understanding of the inner-workings of a {gtsummary} object so they may more easily modify them to suit your own needs. If this does not describe you, please refer to the <a href="https://www.danieldsjoberg.com/gtsummary/">{gtsummary} website</a> to an introduction on how to use the package’s functions and tutorials on advanced use.</p>
+<p>This vignette is meant for those who wish to contribute to
+{gtsummary}, or users who wish to gain an understanding of the
+inner-workings of a {gtsummary} object so they may more easily modify
+them to suit your own needs. If this does not describe you, please refer
+to the <a href="https://www.danieldsjoberg.com/gtsummary/">{gtsummary}
+website</a> to an introduction on how to use the package’s functions and
+tutorials on advanced use.</p>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>Every {gtsummary} table has a few characteristics common among all tables created with the package. Here, we review those characteristics, and provide instructions on how to construct a {gtsummary} object.</p>
+<p>Every {gtsummary} table has a few characteristics common among all
+tables created with the package. Here, we review those characteristics,
+and provide instructions on how to construct a {gtsummary} object.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ddsjoberg/gtsummary" class="external-link">gtsummary</a></span><span class="op">)</span>
-
-<span class="va">tbl_regression_ex</span> <span class="op">&lt;-</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">age</span> <span class="op">~</span> <span class="va">grade</span> <span class="op">+</span> <span class="va">marker</span>, <span class="va">trial</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/tbl_regression.html">tbl_regression</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/bold_p.html">bold_p</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> 
-
-<span class="va">tbl_summary_ex</span> <span class="op">&lt;-</span>
-  <span class="va">trial</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">trt</span>, <span class="va">age</span>, <span class="va">grade</span>, <span class="va">response</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/tbl_summary.html">tbl_summary</a></span><span class="op">(</span>by <span class="op">=</span> <span class="va">trt</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ddsjoberg/gtsummary" class="external-link">gtsummary</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tbl_regression_ex</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">age</span> <span class="op">~</span> <span class="va">grade</span> <span class="op">+</span> <span class="va">marker</span>, <span class="va">trial</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/tbl_regression.html">tbl_regression</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/bold_p.html">bold_p</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="va">tbl_summary_ex</span> <span class="op">&lt;-</span></span>
+<span>  <span class="va">trial</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">trt</span>, <span class="va">age</span>, <span class="va">grade</span>, <span class="va">response</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/tbl_summary.html">tbl_summary</a></span><span class="op">(</span>by <span class="op">=</span> <span class="va">trt</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="structure-of-a-gtsummary-object">Structure of a {gtsummary} object<a class="anchor" aria-label="anchor" href="#structure-of-a-gtsummary-object"></a>
 </h2>
-<p>Every {gtsummary} object is a list comprising of, at minimum, these elements:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>.<span class="op">$</span>table_body    .<span class="op">$</span>table_styling         </span></code></pre></div>
+<p>Every {gtsummary} object is a list comprising of, at minimum, these
+elements:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>.<span class="sc">$</span>table_body    .<span class="sc">$</span>table_styling         </span></code></pre></div>
 <div class="section level4">
 <h4 id="table_body">table_body<a class="anchor" aria-label="anchor" href="#table_body"></a>
 </h4>
-<p>The <code>.$table_body</code> object is the data frame that will ultimately be printed as the output. The table must include columns <code>"label"</code>, <code>"row_type"</code>, and <code>"variable"</code>. The <code>"label"</code> column is printed, and the other two are hidden from the final output.</p>
+<p>The <code>.$table_body</code> object is the data frame that will
+ultimately be printed as the output. The table must include columns
+<code>"label"</code>, <code>"row_type"</code>, and
+<code>"variable"</code>. The <code>"label"</code> column is printed, and
+the other two are hidden from the final output.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tbl_summary_ex</span><span class="op">$</span><span class="va">table_body</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 7</span></span>
-<span class="co">#&gt;   variable var_type    var_label      row_type label          stat_1      stat_2</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> age      continuous  Age            label    Age            46 (37, 59) 48 (3…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> age      continuous  Age            missing  Unknown        7           4     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> grade    categorical Grade          label    Grade          <span style="color: #BB0000;">NA</span>          <span style="color: #BB0000;">NA</span>    </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> grade    categorical Grade          level    I              35 (36%)    33 (3…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> grade    categorical Grade          level    II             32 (33%)    36 (3…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> grade    categorical Grade          level    III            31 (32%)    33 (3…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">7</span> response dichotomous Tumor Response label    Tumor Response 28 (29%)    33 (3…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">8</span> response dichotomous Tumor Response missing  Unknown        3           4</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">tbl_summary_ex</span><span class="op">$</span><span class="va">table_body</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 7</span></span></span>
+<span><span class="co">#&gt;   variable var_type    var_label      row_type label          stat_1      stat_2</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> age      continuous  Age            label    Age            46 (37, 59) 48 (3…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> age      continuous  Age            missing  Unknown        7           4     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> grade    categorical Grade          label    Grade          <span style="color: #BB0000;">NA</span>          <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> grade    categorical Grade          level    I              35 (36%)    33 (3…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> grade    categorical Grade          level    II             32 (33%)    36 (3…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> grade    categorical Grade          level    III            31 (32%)    33 (3…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> response dichotomous Tumor Response label    Tumor Response 28 (29%)    33 (3…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> response dichotomous Tumor Response missing  Unknown        3           4</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="table_styling">table_styling<a class="anchor" aria-label="anchor" href="#table_styling"></a>
 </h4>
-<p>The <code>.$table_styling</code> object is a list of data frames containing information about how <code>.$table_body</code> is printed, formatted, and styled.<br>
-The list contains the following data frames <code>header</code>, <code>footnote</code>, <code>footnote_abbrev</code>, <code>fmt_fun</code>, <code>text_format</code>, <code>fmt_missing</code>, <code>cols_merge</code> and the following objects <code>source_note</code>, <code>caption</code>, <code>horizontal_line_above</code>.</p>
+<p>The <code>.$table_styling</code> object is a list of data frames
+containing information about how <code>.$table_body</code> is printed,
+formatted, and styled.<br>
+The list contains the following data frames <code>header</code>,
+<code>footnote</code>, <code>footnote_abbrev</code>,
+<code>fmt_fun</code>, <code>text_format</code>,
+<code>fmt_missing</code>, <code>cols_merge</code> and the following
+objects <code>source_note</code>, <code>caption</code>,
+<code>horizontal_line_above</code>.</p>
 <p><strong><code>header</code></strong></p>
-<p>The <code>header</code> table has the following columns and is one row per column found in <code>.$table_body</code>. The table contains styling information that applies to entire column or the columns headers.</p>
-<div id="udiicjsqpe" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<p>The <code>header</code> table has the following columns and is one
+row per column found in <code>.$table_body</code>. The table contains
+styling information that applies to entire column or the columns
+headers.</p>
+<div id="pgyichhvve" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#udiicjsqpe .gt_table {
+#pgyichhvve .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -209,7 +235,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-left-color: #D3D3D3;
 }
 
-#udiicjsqpe .gt_heading {
+#pgyichhvve .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -221,33 +247,42 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#udiicjsqpe .gt_title {
+#pgyichhvve .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#pgyichhvve .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
   padding-top: 4px;
   padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
 
-#udiicjsqpe .gt_subtitle {
+#pgyichhvve .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
   padding-top: 0;
   padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#udiicjsqpe .gt_bottom_border {
+#pgyichhvve .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#udiicjsqpe .gt_col_headings {
+#pgyichhvve .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -262,7 +297,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#udiicjsqpe .gt_col_heading {
+#pgyichhvve .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -282,7 +317,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   overflow-x: hidden;
 }
 
-#udiicjsqpe .gt_column_spanner_outer {
+#pgyichhvve .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -294,15 +329,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 4px;
 }
 
-#udiicjsqpe .gt_column_spanner_outer:first-child {
+#pgyichhvve .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#udiicjsqpe .gt_column_spanner_outer:last-child {
+#pgyichhvve .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#udiicjsqpe .gt_column_spanner {
+#pgyichhvve .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -314,8 +349,11 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   width: 100%;
 }
 
-#udiicjsqpe .gt_group_heading {
-  padding: 1px;
+#pgyichhvve .gt_group_heading {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -334,9 +372,10 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-width: 1px;
   border-right-color: #D3D3D3;
   vertical-align: middle;
+  text-align: left;
 }
 
-#udiicjsqpe .gt_empty_group_heading {
+#pgyichhvve .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -351,15 +390,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   vertical-align: middle;
 }
 
-#udiicjsqpe .gt_from_md > :first-child {
+#pgyichhvve .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#udiicjsqpe .gt_from_md > :last-child {
+#pgyichhvve .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#udiicjsqpe .gt_row {
+#pgyichhvve .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -378,7 +417,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   overflow-x: hidden;
 }
 
-#udiicjsqpe .gt_stub {
+#pgyichhvve .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -387,10 +426,29 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-style: solid;
   border-right-width: 2px;
   border-right-color: #D3D3D3;
-  padding-left: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#udiicjsqpe .gt_summary_row {
+#pgyichhvve .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#pgyichhvve .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#pgyichhvve .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -400,17 +458,26 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 5px;
 }
 
-#udiicjsqpe .gt_first_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
-  padding-left: 5px;
-  padding-right: 5px;
+#pgyichhvve .gt_first_summary_row {
   border-top-style: solid;
-  border-top-width: 2px;
   border-top-color: #D3D3D3;
 }
 
-#udiicjsqpe .gt_grand_summary_row {
+#pgyichhvve .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#pgyichhvve .gt_last_summary_row {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pgyichhvve .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -420,7 +487,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 5px;
 }
 
-#udiicjsqpe .gt_first_grand_summary_row {
+#pgyichhvve .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -430,11 +497,11 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-top-color: #D3D3D3;
 }
 
-#udiicjsqpe .gt_striped {
+#pgyichhvve .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#udiicjsqpe .gt_table_body {
+#pgyichhvve .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -443,7 +510,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-bottom-color: #D3D3D3;
 }
 
-#udiicjsqpe .gt_footnotes {
+#pgyichhvve .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -457,13 +524,16 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#udiicjsqpe .gt_footnote {
+#pgyichhvve .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding: 1px;
+  padding-left: 1px;
+  padding-right: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#udiicjsqpe .gt_sourcenotes {
+#pgyichhvve .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -477,119 +547,169 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#udiicjsqpe .gt_sourcenote {
+#pgyichhvve .gt_sourcenote {
   font-size: 90%;
-  padding: 1px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#udiicjsqpe .gt_left {
+#pgyichhvve .gt_left {
   text-align: left;
 }
 
-#udiicjsqpe .gt_center {
+#pgyichhvve .gt_center {
   text-align: center;
 }
 
-#udiicjsqpe .gt_right {
+#pgyichhvve .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#udiicjsqpe .gt_font_normal {
+#pgyichhvve .gt_font_normal {
   font-weight: normal;
 }
 
-#udiicjsqpe .gt_font_bold {
+#pgyichhvve .gt_font_bold {
   font-weight: bold;
 }
 
-#udiicjsqpe .gt_font_italic {
+#pgyichhvve .gt_font_italic {
   font-style: italic;
 }
 
-#udiicjsqpe .gt_super {
+#pgyichhvve .gt_super {
   font-size: 65%;
 }
 
-#udiicjsqpe .gt_footnote_marks {
+#pgyichhvve .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
-  font-size: 65%;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#pgyichhvve .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#pgyichhvve .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#pgyichhvve .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#pgyichhvve .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#pgyichhvve .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#pgyichhvve .gt_indent_5 {
+  text-indent: 25px;
 }
 </style>
 <table class="table gt_table">
 <thead class="gt_col_headings"><tr>
-<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Column</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Description</th>
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Column">Column</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Description">Description</th>
     </tr></thead>
 <tbody class="gt_table_body">
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>column</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>Column name from <code>.$table_body</code></p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>hide</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
-<p>Logical indicating whether the column is hidden in the output</p>
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
+<p>Logical indicating whether the column is hidden in the output. This column is also scoped in <code><a href="../reference/modify.html">modify_header()</a></code> (and friends) to be used in a selecting environment</p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>align</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>Specifies the alignment/justification of the column, e.g. 'center' or 'left'</p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>label</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>Label that will be displayed (if column is displayed in output)</p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>interpret_label</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>the {gt} function that is used to interpret the column label, <code><a href="https://gt.rstudio.com/reference/md.html" class="external-link">gt::md()</a></code> or <code><a href="https://gt.rstudio.com/reference/html.html" class="external-link">gt::html()</a></code></p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>spanning_header</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>Includes text printed above columns as spanning headers.</p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>interpret_spanning_header</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>the {gt} function that is used to interpret the column spanning headers, <code><a href="https://gt.rstudio.com/reference/md.html" class="external-link">gt::md()</a></code> or <code><a href="https://gt.rstudio.com/reference/html.html" class="external-link">gt::html()</a></code></p>
+</div></td>
+</tr>
+<tr>
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
+<p>modify_stat_{*}</p>
+</div></td>
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
+<p>any column beginning with <code>modify_stat_</code> is a statistic available to report in <code><a href="../reference/modify.html">modify_header()</a></code> (and others)</p>
+</div></td>
+</tr>
+<tr>
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
+<p>modify_selector_{*}</p>
+</div></td>
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
+<p>any column beginning with <code>modify_selector_</code> is a column that is scoped in <code><a href="../reference/modify.html">modify_header()</a></code> (and friends) to be used in a selecting environment</p>
 </div></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p><strong><code>footnote</code> &amp; <code>footnote_abbrev</code></strong></p>
-<p>Each {gtsummary} table may contain a single footnote per header and cell within the table. Footnotes and footnote abbreviations are handled separately. Updates/changes to footnote are appended to the bottom of the tibble. A footnote of <code>NA_character_</code> deletes an existing footnote.</p>
-<div id="ncnonmimcb" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<p><strong><code>footnote</code> &amp;
+<code>footnote_abbrev</code></strong></p>
+<p>Each {gtsummary} table may contain a single footnote per header and
+cell within the table. Footnotes and footnote abbreviations are handled
+separately. Updates/changes to footnote are appended to the bottom of
+the tibble. A footnote of <code>NA_character_</code> deletes an existing
+footnote.</p>
+<div id="lowzhdjjzt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#ncnonmimcb .gt_table {
+#lowzhdjjzt .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -614,7 +734,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-left-color: #D3D3D3;
 }
 
-#ncnonmimcb .gt_heading {
+#lowzhdjjzt .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -626,33 +746,42 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#ncnonmimcb .gt_title {
+#lowzhdjjzt .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#lowzhdjjzt .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
   padding-top: 4px;
   padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
 
-#ncnonmimcb .gt_subtitle {
+#lowzhdjjzt .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
   padding-top: 0;
   padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#ncnonmimcb .gt_bottom_border {
+#lowzhdjjzt .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ncnonmimcb .gt_col_headings {
+#lowzhdjjzt .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -667,7 +796,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#ncnonmimcb .gt_col_heading {
+#lowzhdjjzt .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -687,7 +816,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   overflow-x: hidden;
 }
 
-#ncnonmimcb .gt_column_spanner_outer {
+#lowzhdjjzt .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -699,15 +828,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 4px;
 }
 
-#ncnonmimcb .gt_column_spanner_outer:first-child {
+#lowzhdjjzt .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ncnonmimcb .gt_column_spanner_outer:last-child {
+#lowzhdjjzt .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ncnonmimcb .gt_column_spanner {
+#lowzhdjjzt .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -719,8 +848,11 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   width: 100%;
 }
 
-#ncnonmimcb .gt_group_heading {
-  padding: 1px;
+#lowzhdjjzt .gt_group_heading {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -739,9 +871,10 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-width: 1px;
   border-right-color: #D3D3D3;
   vertical-align: middle;
+  text-align: left;
 }
 
-#ncnonmimcb .gt_empty_group_heading {
+#lowzhdjjzt .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -756,15 +889,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   vertical-align: middle;
 }
 
-#ncnonmimcb .gt_from_md > :first-child {
+#lowzhdjjzt .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ncnonmimcb .gt_from_md > :last-child {
+#lowzhdjjzt .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ncnonmimcb .gt_row {
+#lowzhdjjzt .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -783,7 +916,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   overflow-x: hidden;
 }
 
-#ncnonmimcb .gt_stub {
+#lowzhdjjzt .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -792,10 +925,29 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-style: solid;
   border-right-width: 2px;
   border-right-color: #D3D3D3;
-  padding-left: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#ncnonmimcb .gt_summary_row {
+#lowzhdjjzt .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#lowzhdjjzt .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#lowzhdjjzt .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -805,17 +957,26 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 5px;
 }
 
-#ncnonmimcb .gt_first_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
-  padding-left: 5px;
-  padding-right: 5px;
+#lowzhdjjzt .gt_first_summary_row {
   border-top-style: solid;
-  border-top-width: 2px;
   border-top-color: #D3D3D3;
 }
 
-#ncnonmimcb .gt_grand_summary_row {
+#lowzhdjjzt .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#lowzhdjjzt .gt_last_summary_row {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lowzhdjjzt .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -825,7 +986,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 5px;
 }
 
-#ncnonmimcb .gt_first_grand_summary_row {
+#lowzhdjjzt .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -835,11 +996,11 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-top-color: #D3D3D3;
 }
 
-#ncnonmimcb .gt_striped {
+#lowzhdjjzt .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ncnonmimcb .gt_table_body {
+#lowzhdjjzt .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -848,7 +1009,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-bottom-color: #D3D3D3;
 }
 
-#ncnonmimcb .gt_footnotes {
+#lowzhdjjzt .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -862,13 +1023,16 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#ncnonmimcb .gt_footnote {
+#lowzhdjjzt .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding: 1px;
+  padding-left: 1px;
+  padding-right: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#ncnonmimcb .gt_sourcenotes {
+#lowzhdjjzt .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -882,73 +1046,102 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#ncnonmimcb .gt_sourcenote {
+#lowzhdjjzt .gt_sourcenote {
   font-size: 90%;
-  padding: 1px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#ncnonmimcb .gt_left {
+#lowzhdjjzt .gt_left {
   text-align: left;
 }
 
-#ncnonmimcb .gt_center {
+#lowzhdjjzt .gt_center {
   text-align: center;
 }
 
-#ncnonmimcb .gt_right {
+#lowzhdjjzt .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ncnonmimcb .gt_font_normal {
+#lowzhdjjzt .gt_font_normal {
   font-weight: normal;
 }
 
-#ncnonmimcb .gt_font_bold {
+#lowzhdjjzt .gt_font_bold {
   font-weight: bold;
 }
 
-#ncnonmimcb .gt_font_italic {
+#lowzhdjjzt .gt_font_italic {
   font-style: italic;
 }
 
-#ncnonmimcb .gt_super {
+#lowzhdjjzt .gt_super {
   font-size: 65%;
 }
 
-#ncnonmimcb .gt_footnote_marks {
+#lowzhdjjzt .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
-  font-size: 65%;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#lowzhdjjzt .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#lowzhdjjzt .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#lowzhdjjzt .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#lowzhdjjzt .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#lowzhdjjzt .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#lowzhdjjzt .gt_indent_5 {
+  text-indent: 25px;
 }
 </style>
 <table class="table gt_table">
 <thead class="gt_col_headings"><tr>
-<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Column</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Description</th>
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Column">Column</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Description">Description</th>
     </tr></thead>
 <tbody class="gt_table_body">
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>column</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>Column name from <code>.$table_body</code></p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>rows</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>expression selecting rows in <code>.$table_body</code>, <code>NA</code> indicates to add footnote to header</p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>footnote</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>string containing footnote to add to column/row</p>
 </div></td>
 </tr>
@@ -956,13 +1149,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
 </table>
 </div>
 <p><strong><code>fmt_fun</code></strong></p>
-<p>Numeric columns/rows are styled with the functions stored in <code>fmt_fun</code>. Updates/changes to styling functions are appended to the bottom of the tibble.</p>
-<div id="komeccaltf" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<p>Numeric columns/rows are styled with the functions stored in
+<code>fmt_fun</code>. Updates/changes to styling functions are appended
+to the bottom of the tibble.</p>
+<div id="cbjbgfnbfl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#komeccaltf .gt_table {
+#cbjbgfnbfl .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -987,7 +1182,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-left-color: #D3D3D3;
 }
 
-#komeccaltf .gt_heading {
+#cbjbgfnbfl .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -999,33 +1194,42 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#komeccaltf .gt_title {
+#cbjbgfnbfl .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#cbjbgfnbfl .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
   padding-top: 4px;
   padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
 
-#komeccaltf .gt_subtitle {
+#cbjbgfnbfl .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
   padding-top: 0;
   padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#komeccaltf .gt_bottom_border {
+#cbjbgfnbfl .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#komeccaltf .gt_col_headings {
+#cbjbgfnbfl .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1040,7 +1244,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#komeccaltf .gt_col_heading {
+#cbjbgfnbfl .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1060,7 +1264,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   overflow-x: hidden;
 }
 
-#komeccaltf .gt_column_spanner_outer {
+#cbjbgfnbfl .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1072,15 +1276,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 4px;
 }
 
-#komeccaltf .gt_column_spanner_outer:first-child {
+#cbjbgfnbfl .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#komeccaltf .gt_column_spanner_outer:last-child {
+#cbjbgfnbfl .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#komeccaltf .gt_column_spanner {
+#cbjbgfnbfl .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1092,8 +1296,11 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   width: 100%;
 }
 
-#komeccaltf .gt_group_heading {
-  padding: 1px;
+#cbjbgfnbfl .gt_group_heading {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1112,9 +1319,10 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-width: 1px;
   border-right-color: #D3D3D3;
   vertical-align: middle;
+  text-align: left;
 }
 
-#komeccaltf .gt_empty_group_heading {
+#cbjbgfnbfl .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1129,15 +1337,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   vertical-align: middle;
 }
 
-#komeccaltf .gt_from_md > :first-child {
+#cbjbgfnbfl .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#komeccaltf .gt_from_md > :last-child {
+#cbjbgfnbfl .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#komeccaltf .gt_row {
+#cbjbgfnbfl .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1156,7 +1364,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   overflow-x: hidden;
 }
 
-#komeccaltf .gt_stub {
+#cbjbgfnbfl .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1165,10 +1373,29 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-style: solid;
   border-right-width: 2px;
   border-right-color: #D3D3D3;
-  padding-left: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#komeccaltf .gt_summary_row {
+#cbjbgfnbfl .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#cbjbgfnbfl .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#cbjbgfnbfl .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1178,17 +1405,26 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 5px;
 }
 
-#komeccaltf .gt_first_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
-  padding-left: 5px;
-  padding-right: 5px;
+#cbjbgfnbfl .gt_first_summary_row {
   border-top-style: solid;
-  border-top-width: 2px;
   border-top-color: #D3D3D3;
 }
 
-#komeccaltf .gt_grand_summary_row {
+#cbjbgfnbfl .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#cbjbgfnbfl .gt_last_summary_row {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cbjbgfnbfl .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1198,7 +1434,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 5px;
 }
 
-#komeccaltf .gt_first_grand_summary_row {
+#cbjbgfnbfl .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1208,11 +1444,11 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-top-color: #D3D3D3;
 }
 
-#komeccaltf .gt_striped {
+#cbjbgfnbfl .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#komeccaltf .gt_table_body {
+#cbjbgfnbfl .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1221,7 +1457,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-bottom-color: #D3D3D3;
 }
 
-#komeccaltf .gt_footnotes {
+#cbjbgfnbfl .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1235,13 +1471,16 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#komeccaltf .gt_footnote {
+#cbjbgfnbfl .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding: 1px;
+  padding-left: 1px;
+  padding-right: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#komeccaltf .gt_sourcenotes {
+#cbjbgfnbfl .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1255,73 +1494,102 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#komeccaltf .gt_sourcenote {
+#cbjbgfnbfl .gt_sourcenote {
   font-size: 90%;
-  padding: 1px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#komeccaltf .gt_left {
+#cbjbgfnbfl .gt_left {
   text-align: left;
 }
 
-#komeccaltf .gt_center {
+#cbjbgfnbfl .gt_center {
   text-align: center;
 }
 
-#komeccaltf .gt_right {
+#cbjbgfnbfl .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#komeccaltf .gt_font_normal {
+#cbjbgfnbfl .gt_font_normal {
   font-weight: normal;
 }
 
-#komeccaltf .gt_font_bold {
+#cbjbgfnbfl .gt_font_bold {
   font-weight: bold;
 }
 
-#komeccaltf .gt_font_italic {
+#cbjbgfnbfl .gt_font_italic {
   font-style: italic;
 }
 
-#komeccaltf .gt_super {
+#cbjbgfnbfl .gt_super {
   font-size: 65%;
 }
 
-#komeccaltf .gt_footnote_marks {
+#cbjbgfnbfl .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
-  font-size: 65%;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#cbjbgfnbfl .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#cbjbgfnbfl .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#cbjbgfnbfl .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#cbjbgfnbfl .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#cbjbgfnbfl .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#cbjbgfnbfl .gt_indent_5 {
+  text-indent: 25px;
 }
 </style>
 <table class="table gt_table">
 <thead class="gt_col_headings"><tr>
-<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Column</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Description</th>
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Column">Column</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Description">Description</th>
     </tr></thead>
 <tbody class="gt_table_body">
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>column</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>Column name from <code>.$table_body</code></p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>rows</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>expression selecting rows in <code>.$table_body</code></p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>fmt_fun</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>list of formatting/styling functions</p>
 </div></td>
 </tr>
@@ -1329,13 +1597,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
 </table>
 </div>
 <p><strong><code>text_format</code></strong></p>
-<p>Columns/rows are styled with bold, italic, or indenting stored in <code>text_format</code>. Updates/changes to styling functions are appended to the bottom of the tibble.</p>
-<div id="ykuadplanv" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<p>Columns/rows are styled with bold, italic, or indenting stored in
+<code>text_format</code>. Updates/changes to styling functions are
+appended to the bottom of the tibble.</p>
+<div id="kbuoxqtzli" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#ykuadplanv .gt_table {
+#kbuoxqtzli .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1360,7 +1630,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-left-color: #D3D3D3;
 }
 
-#ykuadplanv .gt_heading {
+#kbuoxqtzli .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1372,33 +1642,42 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#ykuadplanv .gt_title {
+#kbuoxqtzli .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#kbuoxqtzli .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
   padding-top: 4px;
   padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
 
-#ykuadplanv .gt_subtitle {
+#kbuoxqtzli .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
   padding-top: 0;
   padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#ykuadplanv .gt_bottom_border {
+#kbuoxqtzli .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ykuadplanv .gt_col_headings {
+#kbuoxqtzli .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1413,7 +1692,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#ykuadplanv .gt_col_heading {
+#kbuoxqtzli .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1433,7 +1712,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   overflow-x: hidden;
 }
 
-#ykuadplanv .gt_column_spanner_outer {
+#kbuoxqtzli .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1445,15 +1724,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 4px;
 }
 
-#ykuadplanv .gt_column_spanner_outer:first-child {
+#kbuoxqtzli .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ykuadplanv .gt_column_spanner_outer:last-child {
+#kbuoxqtzli .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ykuadplanv .gt_column_spanner {
+#kbuoxqtzli .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1465,8 +1744,11 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   width: 100%;
 }
 
-#ykuadplanv .gt_group_heading {
-  padding: 1px;
+#kbuoxqtzli .gt_group_heading {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1485,9 +1767,10 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-width: 1px;
   border-right-color: #D3D3D3;
   vertical-align: middle;
+  text-align: left;
 }
 
-#ykuadplanv .gt_empty_group_heading {
+#kbuoxqtzli .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1502,15 +1785,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   vertical-align: middle;
 }
 
-#ykuadplanv .gt_from_md > :first-child {
+#kbuoxqtzli .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ykuadplanv .gt_from_md > :last-child {
+#kbuoxqtzli .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ykuadplanv .gt_row {
+#kbuoxqtzli .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1529,7 +1812,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   overflow-x: hidden;
 }
 
-#ykuadplanv .gt_stub {
+#kbuoxqtzli .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1538,10 +1821,29 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-style: solid;
   border-right-width: 2px;
   border-right-color: #D3D3D3;
-  padding-left: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#ykuadplanv .gt_summary_row {
+#kbuoxqtzli .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#kbuoxqtzli .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#kbuoxqtzli .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1551,17 +1853,26 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 5px;
 }
 
-#ykuadplanv .gt_first_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
-  padding-left: 5px;
-  padding-right: 5px;
+#kbuoxqtzli .gt_first_summary_row {
   border-top-style: solid;
-  border-top-width: 2px;
   border-top-color: #D3D3D3;
 }
 
-#ykuadplanv .gt_grand_summary_row {
+#kbuoxqtzli .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#kbuoxqtzli .gt_last_summary_row {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kbuoxqtzli .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1571,7 +1882,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 5px;
 }
 
-#ykuadplanv .gt_first_grand_summary_row {
+#kbuoxqtzli .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1581,11 +1892,11 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-top-color: #D3D3D3;
 }
 
-#ykuadplanv .gt_striped {
+#kbuoxqtzli .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ykuadplanv .gt_table_body {
+#kbuoxqtzli .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1594,7 +1905,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-bottom-color: #D3D3D3;
 }
 
-#ykuadplanv .gt_footnotes {
+#kbuoxqtzli .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1608,13 +1919,16 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#ykuadplanv .gt_footnote {
+#kbuoxqtzli .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding: 1px;
+  padding-left: 1px;
+  padding-right: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#ykuadplanv .gt_sourcenotes {
+#kbuoxqtzli .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1628,81 +1942,110 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#ykuadplanv .gt_sourcenote {
+#kbuoxqtzli .gt_sourcenote {
   font-size: 90%;
-  padding: 1px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#ykuadplanv .gt_left {
+#kbuoxqtzli .gt_left {
   text-align: left;
 }
 
-#ykuadplanv .gt_center {
+#kbuoxqtzli .gt_center {
   text-align: center;
 }
 
-#ykuadplanv .gt_right {
+#kbuoxqtzli .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ykuadplanv .gt_font_normal {
+#kbuoxqtzli .gt_font_normal {
   font-weight: normal;
 }
 
-#ykuadplanv .gt_font_bold {
+#kbuoxqtzli .gt_font_bold {
   font-weight: bold;
 }
 
-#ykuadplanv .gt_font_italic {
+#kbuoxqtzli .gt_font_italic {
   font-style: italic;
 }
 
-#ykuadplanv .gt_super {
+#kbuoxqtzli .gt_super {
   font-size: 65%;
 }
 
-#ykuadplanv .gt_footnote_marks {
+#kbuoxqtzli .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
-  font-size: 65%;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#kbuoxqtzli .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#kbuoxqtzli .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#kbuoxqtzli .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#kbuoxqtzli .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#kbuoxqtzli .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#kbuoxqtzli .gt_indent_5 {
+  text-indent: 25px;
 }
 </style>
 <table class="table gt_table">
 <thead class="gt_col_headings"><tr>
-<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Column</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Description</th>
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Column">Column</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Description">Description</th>
     </tr></thead>
 <tbody class="gt_table_body">
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>column</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>Column name from <code>.$table_body</code></p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>rows</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>expression selecting rows in <code>.$table_body</code></p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>format_type</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>one of <code>c('bold', 'italic', 'indent')</code></p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>undo_text_format</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>logical indicating where the formatting indicated should be undone/removed.</p>
 </div></td>
 </tr>
@@ -1710,13 +2053,17 @@ The list contains the following data frames <code>header</code>, <code>footnote<
 </table>
 </div>
 <p><strong><code>fmt_missing</code></strong></p>
-<p>By default, all <code>NA</code> values are shown blanks. Missing values in columns/rows are replaced with the <code>symbol</code>. For example, reference rows in <code><a href="../reference/tbl_regression.html">tbl_regression()</a></code> are shown with an em-dash. Updates/changes to styling functions are appended to the bottom of the tibble.</p>
-<div id="wejjxwtgrf" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<p>By default, all <code>NA</code> values are shown blanks. Missing
+values in columns/rows are replaced with the <code>symbol</code>. For
+example, reference rows in <code><a href="../reference/tbl_regression.html">tbl_regression()</a></code> are shown with
+an em-dash. Updates/changes to styling functions are appended to the
+bottom of the tibble.</p>
+<div id="bpxvjpbfdt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#wejjxwtgrf .gt_table {
+#bpxvjpbfdt .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1741,7 +2088,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-left-color: #D3D3D3;
 }
 
-#wejjxwtgrf .gt_heading {
+#bpxvjpbfdt .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1753,33 +2100,42 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#wejjxwtgrf .gt_title {
+#bpxvjpbfdt .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#bpxvjpbfdt .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
   padding-top: 4px;
   padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
 
-#wejjxwtgrf .gt_subtitle {
+#bpxvjpbfdt .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
   padding-top: 0;
   padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#wejjxwtgrf .gt_bottom_border {
+#bpxvjpbfdt .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#wejjxwtgrf .gt_col_headings {
+#bpxvjpbfdt .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1794,7 +2150,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#wejjxwtgrf .gt_col_heading {
+#bpxvjpbfdt .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1814,7 +2170,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   overflow-x: hidden;
 }
 
-#wejjxwtgrf .gt_column_spanner_outer {
+#bpxvjpbfdt .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1826,15 +2182,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 4px;
 }
 
-#wejjxwtgrf .gt_column_spanner_outer:first-child {
+#bpxvjpbfdt .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#wejjxwtgrf .gt_column_spanner_outer:last-child {
+#bpxvjpbfdt .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#wejjxwtgrf .gt_column_spanner {
+#bpxvjpbfdt .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1846,8 +2202,11 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   width: 100%;
 }
 
-#wejjxwtgrf .gt_group_heading {
-  padding: 1px;
+#bpxvjpbfdt .gt_group_heading {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1866,9 +2225,10 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-width: 1px;
   border-right-color: #D3D3D3;
   vertical-align: middle;
+  text-align: left;
 }
 
-#wejjxwtgrf .gt_empty_group_heading {
+#bpxvjpbfdt .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1883,15 +2243,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   vertical-align: middle;
 }
 
-#wejjxwtgrf .gt_from_md > :first-child {
+#bpxvjpbfdt .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#wejjxwtgrf .gt_from_md > :last-child {
+#bpxvjpbfdt .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#wejjxwtgrf .gt_row {
+#bpxvjpbfdt .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1910,7 +2270,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   overflow-x: hidden;
 }
 
-#wejjxwtgrf .gt_stub {
+#bpxvjpbfdt .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1919,10 +2279,29 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-style: solid;
   border-right-width: 2px;
   border-right-color: #D3D3D3;
-  padding-left: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#wejjxwtgrf .gt_summary_row {
+#bpxvjpbfdt .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#bpxvjpbfdt .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#bpxvjpbfdt .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1932,17 +2311,26 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 5px;
 }
 
-#wejjxwtgrf .gt_first_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
-  padding-left: 5px;
-  padding-right: 5px;
+#bpxvjpbfdt .gt_first_summary_row {
   border-top-style: solid;
-  border-top-width: 2px;
   border-top-color: #D3D3D3;
 }
 
-#wejjxwtgrf .gt_grand_summary_row {
+#bpxvjpbfdt .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#bpxvjpbfdt .gt_last_summary_row {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bpxvjpbfdt .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1952,7 +2340,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 5px;
 }
 
-#wejjxwtgrf .gt_first_grand_summary_row {
+#bpxvjpbfdt .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1962,11 +2350,11 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-top-color: #D3D3D3;
 }
 
-#wejjxwtgrf .gt_striped {
+#bpxvjpbfdt .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#wejjxwtgrf .gt_table_body {
+#bpxvjpbfdt .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1975,7 +2363,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-bottom-color: #D3D3D3;
 }
 
-#wejjxwtgrf .gt_footnotes {
+#bpxvjpbfdt .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1989,13 +2377,16 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#wejjxwtgrf .gt_footnote {
+#bpxvjpbfdt .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding: 1px;
+  padding-left: 1px;
+  padding-right: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#wejjxwtgrf .gt_sourcenotes {
+#bpxvjpbfdt .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2009,73 +2400,102 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#wejjxwtgrf .gt_sourcenote {
+#bpxvjpbfdt .gt_sourcenote {
   font-size: 90%;
-  padding: 1px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#wejjxwtgrf .gt_left {
+#bpxvjpbfdt .gt_left {
   text-align: left;
 }
 
-#wejjxwtgrf .gt_center {
+#bpxvjpbfdt .gt_center {
   text-align: center;
 }
 
-#wejjxwtgrf .gt_right {
+#bpxvjpbfdt .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#wejjxwtgrf .gt_font_normal {
+#bpxvjpbfdt .gt_font_normal {
   font-weight: normal;
 }
 
-#wejjxwtgrf .gt_font_bold {
+#bpxvjpbfdt .gt_font_bold {
   font-weight: bold;
 }
 
-#wejjxwtgrf .gt_font_italic {
+#bpxvjpbfdt .gt_font_italic {
   font-style: italic;
 }
 
-#wejjxwtgrf .gt_super {
+#bpxvjpbfdt .gt_super {
   font-size: 65%;
 }
 
-#wejjxwtgrf .gt_footnote_marks {
+#bpxvjpbfdt .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
-  font-size: 65%;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#bpxvjpbfdt .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#bpxvjpbfdt .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#bpxvjpbfdt .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#bpxvjpbfdt .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#bpxvjpbfdt .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#bpxvjpbfdt .gt_indent_5 {
+  text-indent: 25px;
 }
 </style>
 <table class="table gt_table">
 <thead class="gt_col_headings"><tr>
-<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Column</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Description</th>
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Column">Column</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Description">Description</th>
     </tr></thead>
 <tbody class="gt_table_body">
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>column</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>Column name from <code>.$table_body</code></p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>rows</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>expression selecting rows in <code>.$table_body</code></p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>symbol</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>string to replace missing values with, e.g. an em-dash</p>
 </div></td>
 </tr>
@@ -2083,13 +2503,16 @@ The list contains the following data frames <code>header</code>, <code>footnote<
 </table>
 </div>
 <p><strong><code>cols_merge</code></strong></p>
-<p>This object is <em>experimental</em> and may change in the future. This tibble gives instructions for merging columns into a single column. The implementation in <code><a href="../reference/as_gt.html">as_gt()</a></code> will be updated after <code><a href="https://gt.rstudio.com/reference/cols_label.html" class="external-link">gt::cols_label()</a></code> gains a <code>rows=</code> argument.</p>
-<div id="wrjtvznitp" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<p>This object is <em>experimental</em> and may change in the future.
+This tibble gives instructions for merging columns into a single column.
+The implementation in <code><a href="../reference/as_gt.html">as_gt()</a></code> will be updated after
+<code><a href="https://gt.rstudio.com/reference/cols_label.html" class="external-link">gt::cols_label()</a></code> gains a <code>rows=</code> argument.</p>
+<div id="bseqfkyfxc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#wrjtvznitp .gt_table {
+#bseqfkyfxc .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -2114,7 +2537,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-left-color: #D3D3D3;
 }
 
-#wrjtvznitp .gt_heading {
+#bseqfkyfxc .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2126,33 +2549,42 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#wrjtvznitp .gt_title {
+#bseqfkyfxc .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#bseqfkyfxc .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
   padding-top: 4px;
   padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
 
-#wrjtvznitp .gt_subtitle {
+#bseqfkyfxc .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
   padding-top: 0;
   padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#wrjtvznitp .gt_bottom_border {
+#bseqfkyfxc .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#wrjtvznitp .gt_col_headings {
+#bseqfkyfxc .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2167,7 +2599,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#wrjtvznitp .gt_col_heading {
+#bseqfkyfxc .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2187,7 +2619,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   overflow-x: hidden;
 }
 
-#wrjtvznitp .gt_column_spanner_outer {
+#bseqfkyfxc .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2199,15 +2631,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 4px;
 }
 
-#wrjtvznitp .gt_column_spanner_outer:first-child {
+#bseqfkyfxc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#wrjtvznitp .gt_column_spanner_outer:last-child {
+#bseqfkyfxc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#wrjtvznitp .gt_column_spanner {
+#bseqfkyfxc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2219,8 +2651,11 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   width: 100%;
 }
 
-#wrjtvznitp .gt_group_heading {
-  padding: 1px;
+#bseqfkyfxc .gt_group_heading {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2239,9 +2674,10 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-width: 1px;
   border-right-color: #D3D3D3;
   vertical-align: middle;
+  text-align: left;
 }
 
-#wrjtvznitp .gt_empty_group_heading {
+#bseqfkyfxc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2256,15 +2692,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   vertical-align: middle;
 }
 
-#wrjtvznitp .gt_from_md > :first-child {
+#bseqfkyfxc .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#wrjtvznitp .gt_from_md > :last-child {
+#bseqfkyfxc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#wrjtvznitp .gt_row {
+#bseqfkyfxc .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -2283,7 +2719,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   overflow-x: hidden;
 }
 
-#wrjtvznitp .gt_stub {
+#bseqfkyfxc .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2292,10 +2728,29 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-style: solid;
   border-right-width: 2px;
   border-right-color: #D3D3D3;
-  padding-left: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#wrjtvznitp .gt_summary_row {
+#bseqfkyfxc .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#bseqfkyfxc .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#bseqfkyfxc .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2305,17 +2760,26 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 5px;
 }
 
-#wrjtvznitp .gt_first_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
-  padding-left: 5px;
-  padding-right: 5px;
+#bseqfkyfxc .gt_first_summary_row {
   border-top-style: solid;
-  border-top-width: 2px;
   border-top-color: #D3D3D3;
 }
 
-#wrjtvznitp .gt_grand_summary_row {
+#bseqfkyfxc .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#bseqfkyfxc .gt_last_summary_row {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bseqfkyfxc .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2325,7 +2789,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 5px;
 }
 
-#wrjtvznitp .gt_first_grand_summary_row {
+#bseqfkyfxc .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -2335,11 +2799,11 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-top-color: #D3D3D3;
 }
 
-#wrjtvznitp .gt_striped {
+#bseqfkyfxc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#wrjtvznitp .gt_table_body {
+#bseqfkyfxc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2348,7 +2812,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-bottom-color: #D3D3D3;
 }
 
-#wrjtvznitp .gt_footnotes {
+#bseqfkyfxc .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2362,13 +2826,16 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#wrjtvznitp .gt_footnote {
+#bseqfkyfxc .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding: 1px;
+  padding-left: 1px;
+  padding-right: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#wrjtvznitp .gt_sourcenotes {
+#bseqfkyfxc .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2382,73 +2849,102 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#wrjtvznitp .gt_sourcenote {
+#bseqfkyfxc .gt_sourcenote {
   font-size: 90%;
-  padding: 1px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#wrjtvznitp .gt_left {
+#bseqfkyfxc .gt_left {
   text-align: left;
 }
 
-#wrjtvznitp .gt_center {
+#bseqfkyfxc .gt_center {
   text-align: center;
 }
 
-#wrjtvznitp .gt_right {
+#bseqfkyfxc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#wrjtvznitp .gt_font_normal {
+#bseqfkyfxc .gt_font_normal {
   font-weight: normal;
 }
 
-#wrjtvznitp .gt_font_bold {
+#bseqfkyfxc .gt_font_bold {
   font-weight: bold;
 }
 
-#wrjtvznitp .gt_font_italic {
+#bseqfkyfxc .gt_font_italic {
   font-style: italic;
 }
 
-#wrjtvznitp .gt_super {
+#bseqfkyfxc .gt_super {
   font-size: 65%;
 }
 
-#wrjtvznitp .gt_footnote_marks {
+#bseqfkyfxc .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
-  font-size: 65%;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#bseqfkyfxc .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#bseqfkyfxc .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#bseqfkyfxc .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#bseqfkyfxc .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#bseqfkyfxc .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#bseqfkyfxc .gt_indent_5 {
+  text-indent: 25px;
 }
 </style>
 <table class="table gt_table">
 <thead class="gt_col_headings"><tr>
-<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Column</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Description</th>
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Column">Column</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Description">Description</th>
     </tr></thead>
 <tbody class="gt_table_body">
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>column</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>Column name from <code>.$table_body</code></p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>rows</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>expression selecting rows in <code>.$table_body</code></p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p>pattern</p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>glue pattern directing how to combine/merge columns. The merged columns will replace the column indicated in 'column'.</p>
 </div></td>
 </tr>
@@ -2456,76 +2952,83 @@ The list contains the following data frames <code>header</code>, <code>footnote<
 </table>
 </div>
 <p><strong><code>source_note</code></strong></p>
-<p>String that is made a table source note. The attribute <code>"text_interpret"</code> is either <code>c("md", "html")</code>.</p>
+<p>String that is made a table source note. The attribute
+<code>"text_interpret"</code> is either
+<code>c("md", "html")</code>.</p>
 <p><strong><code>caption</code></strong></p>
-<p>String that is made into the table caption. The attribute <code>"text_interpret"</code> is either <code>c("md", "html")</code>.</p>
+<p>String that is made into the table caption. The attribute
+<code>"text_interpret"</code> is either
+<code>c("md", "html")</code>.</p>
 <p><strong><code>horizontal_line_above</code></strong></p>
-<p>Expression identifying a row where a horizontal line is placed above in the table.</p>
+<p>Expression identifying a row where a horizontal line is placed above
+in the table.</p>
 <p>Example from <code><a href="../reference/tbl_regression.html">tbl_regression()</a></code></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tbl_regression_ex</span><span class="op">$</span><span class="va">table_styling</span>
-<span class="co">#&gt; $header</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 24 × 7</span></span>
-<span class="co">#&gt;    column     hide  align interpret_label label interpret_spann… spanning_header</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> variable   TRUE  cent… gt::md          vari… gt::md           <span style="color: #BB0000;">NA</span>             </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> var_label  TRUE  cent… gt::md          var_… gt::md           <span style="color: #BB0000;">NA</span>             </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> var_type   TRUE  cent… gt::md          var_… gt::md           <span style="color: #BB0000;">NA</span>             </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> reference… TRUE  cent… gt::md          refe… gt::md           <span style="color: #BB0000;">NA</span>             </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> row_type   TRUE  cent… gt::md          row_… gt::md           <span style="color: #BB0000;">NA</span>             </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> header_row TRUE  cent… gt::md          head… gt::md           <span style="color: #BB0000;">NA</span>             </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> N_obs      TRUE  cent… gt::md          N_obs gt::md           <span style="color: #BB0000;">NA</span>             </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> N          TRUE  cent… gt::md          **N** gt::md           <span style="color: #BB0000;">NA</span>             </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> coefficie… TRUE  cent… gt::md          coef… gt::md           <span style="color: #BB0000;">NA</span>             </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> coefficie… TRUE  cent… gt::md          coef… gt::md           <span style="color: #BB0000;">NA</span>             </span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 14 more rows</span></span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $footnote</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 4</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 4 variables: column &lt;chr&gt;, rows &lt;list&gt;, text_interpret &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   footnote &lt;chr&gt;</span></span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $footnote_abbrev</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span>
-<span class="co">#&gt;   column    rows      text_interpret footnote                </span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ci        <span style="color: #949494;">&lt;quosure&gt;</span> gt::md         CI = Confidence Interval</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> std.error <span style="color: #949494;">&lt;quosure&gt;</span> gt::md         SE = Standard Error     </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $text_format</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span>
-<span class="co">#&gt;   column  rows       format_type undo_text_format</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> label   <span style="color: #949494;">&lt;language&gt;</span> indent      FALSE           </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> p.value <span style="color: #949494;">&lt;quosure&gt;</span>  bold        FALSE           </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $fmt_missing</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span>
-<span class="co">#&gt;   column    rows      symbol</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> estimate  <span style="color: #949494;">&lt;quosure&gt;</span> —     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ci        <span style="color: #949494;">&lt;quosure&gt;</span> —     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> std.error <span style="color: #949494;">&lt;quosure&gt;</span> —     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> statistic <span style="color: #949494;">&lt;quosure&gt;</span> —     </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $fmt_fun</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 3</span></span>
-<span class="co">#&gt;    column      rows      fmt_fun   </span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> estimate    <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;fn&gt;</span>      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> N           <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;fn&gt;</span>      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> N_obs       <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;fn&gt;</span>      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> n_obs       <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;fn&gt;</span>      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> conf.low    <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;fn&gt;</span>      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> conf.high   <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;fn&gt;</span>      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> p.value     <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;fn&gt;</span>      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> std.error   <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;prrr_fn_&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> statistic   <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;prrr_fn_&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> var_nlevels <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;prrr_fn_&gt;</span></span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $cols_merge</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 3</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 3 variables: column &lt;chr&gt;, rows &lt;list&gt;, pattern &lt;chr&gt;</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">tbl_regression_ex</span><span class="op">$</span><span class="va">table_styling</span></span>
+<span><span class="co">#&gt; $header</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 24 × 9</span></span></span>
+<span><span class="co">#&gt;    column             hide  align  inter…¹ label inter…² spann…³ modif…⁴ modif…⁵</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> variable           TRUE  center gt::md  vari… gt::md  <span style="color: #BB0000;">NA</span>          179     179</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> var_label          TRUE  center gt::md  var_… gt::md  <span style="color: #BB0000;">NA</span>          179     179</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> var_type           TRUE  center gt::md  var_… gt::md  <span style="color: #BB0000;">NA</span>          179     179</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> reference_row      TRUE  center gt::md  refe… gt::md  <span style="color: #BB0000;">NA</span>          179     179</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> row_type           TRUE  center gt::md  row_… gt::md  <span style="color: #BB0000;">NA</span>          179     179</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> header_row         TRUE  center gt::md  head… gt::md  <span style="color: #BB0000;">NA</span>          179     179</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> N_obs              TRUE  center gt::md  N_obs gt::md  <span style="color: #BB0000;">NA</span>          179     179</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> N                  TRUE  center gt::md  **N** gt::md  <span style="color: #BB0000;">NA</span>          179     179</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> coefficients_type  TRUE  center gt::md  coef… gt::md  <span style="color: #BB0000;">NA</span>          179     179</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> coefficients_label TRUE  center gt::md  coef… gt::md  <span style="color: #BB0000;">NA</span>          179     179</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 14 more rows, and abbreviated variable names ¹​interpret_label,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ²​interpret_spanning_header, ³​spanning_header, ⁴​modify_stat_N,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ⁵​modify_stat_n</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $footnote</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 4 variables: column &lt;chr&gt;, rows &lt;list&gt;, text_interpret &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   footnote &lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $footnote_abbrev</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span></span>
+<span><span class="co">#&gt;   column    rows      text_interpret footnote                </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ci        <span style="color: #949494;">&lt;quosure&gt;</span> gt::md         CI = Confidence Interval</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> std.error <span style="color: #949494;">&lt;quosure&gt;</span> gt::md         SE = Standard Error     </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $text_format</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span></span>
+<span><span class="co">#&gt;   column  rows       format_type undo_text_format</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> label   <span style="color: #949494;">&lt;language&gt;</span> indent      FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> p.value <span style="color: #949494;">&lt;quosure&gt;</span>  bold        FALSE           </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $fmt_missing</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
+<span><span class="co">#&gt;   column    rows      symbol</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> estimate  <span style="color: #949494;">&lt;quosure&gt;</span> —     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ci        <span style="color: #949494;">&lt;quosure&gt;</span> —     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> std.error <span style="color: #949494;">&lt;quosure&gt;</span> —     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> statistic <span style="color: #949494;">&lt;quosure&gt;</span> —     </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $fmt_fun</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 3</span></span></span>
+<span><span class="co">#&gt;    column      rows      fmt_fun   </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> estimate    <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;fn&gt;</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> N           <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;fn&gt;</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> N_obs       <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;fn&gt;</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> n_obs       <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;fn&gt;</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> conf.low    <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;fn&gt;</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> conf.high   <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;fn&gt;</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> p.value     <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;fn&gt;</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> std.error   <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;prrr_fn_&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> statistic   <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;prrr_fn_&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> var_nlevels <span style="color: #949494;">&lt;quosure&gt;</span> <span style="color: #949494;">&lt;prrr_fn_&gt;</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $cols_merge</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 3 variables: column &lt;chr&gt;, rows &lt;list&gt;, pattern &lt;chr&gt;</span></span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -2534,63 +3037,107 @@ The list contains the following data frames <code>header</code>, <code>footnote<
 <div class="section level4">
 <h4 id="table_body-1">table_body<a class="anchor" aria-label="anchor" href="#table_body-1"></a>
 </h4>
-<p>When constructing a {gtsummary} object, the author will begin with the <code>.$table_body</code> object. Recall the <code>.$table_body</code> data frame must include columns <code>"label"</code>, <code>"row_type"</code>, and <code>"variable"</code>. Of these columns, only the <code>"label"</code> column will be printed with the final results. The <code>"row_type"</code> column typically will control whether or not the label column is indented. The <code>"variable"</code> column is often used in the <code><a href="../reference/inline_text.html">inline_text()</a></code> family of functions, and merging {gtsummary} tables with <code><a href="../reference/tbl_merge.html">tbl_merge()</a></code>.</p>
+<p>When constructing a {gtsummary} object, the author will begin with
+the <code>.$table_body</code> object. Recall the
+<code>.$table_body</code> data frame must include columns
+<code>"label"</code>, <code>"row_type"</code>, and
+<code>"variable"</code>. Of these columns, only the <code>"label"</code>
+column will be printed with the final results. The
+<code>"row_type"</code> column typically will control whether or not the
+label column is indented. The <code>"variable"</code> column is often
+used in the <code><a href="../reference/inline_text.html">inline_text()</a></code> family of functions, and merging
+{gtsummary} tables with <code><a href="../reference/tbl_merge.html">tbl_merge()</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tbl_regression_ex</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pluck.html" class="external-link">pluck</a></span><span class="op">(</span><span class="st">"table_body"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">variable</span>, <span class="va">row_type</span>, <span class="va">label</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span>
-<span class="co">#&gt;   variable row_type label               </span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> grade    label    Grade               </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> grade    level    I                   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> grade    level    II                  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> grade    level    III                 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> marker   label    Marker Level (ng/mL)</span></code></pre></div>
-<p>The other columns in <code>.$table_body</code> are created by the user and are likely printed in the output. Formatting and printing instructions for these columns is stored in <code>.$table_styling</code>.</p>
+<code class="sourceCode R"><span><span class="va">tbl_regression_ex</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pluck.html" class="external-link">pluck</a></span><span class="op">(</span><span class="st">"table_body"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">variable</span>, <span class="va">row_type</span>, <span class="va">label</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
+<span><span class="co">#&gt;   variable row_type label               </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> grade    label    Grade               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> grade    level    I                   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> grade    level    II                  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> grade    level    III                 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> marker   label    Marker Level (ng/mL)</span></span></code></pre></div>
+<p>The other columns in <code>.$table_body</code> are created by the
+user and are likely printed in the output. Formatting and printing
+instructions for these columns is stored in
+<code>.$table_styling</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="table_styling-1">table_styling<a class="anchor" aria-label="anchor" href="#table_styling-1"></a>
 </h3>
-<p>There are a few internal {gtsummary} functions to assist in constructing and modifying a <code>.$table_header</code> data frame.</p>
+<p>There are a few internal {gtsummary} functions to assist in
+constructing and modifying a <code>.$table_header</code> data frame.</p>
 <ol style="list-style-type: decimal">
-<li><p><code>.create_gtsummary_object(table_body)</code> After a user creates a <code>table_body</code>, pass it to this function and the skeleton of a gtsummary object is created and returned (including the full <code>table_styling</code> list of tables).</p></li>
-<li><p><code>.update_table_styling()</code> After columns are added or removed from <code>table_body</code>, run this function to update <code>.$table_styling</code> to include or remove styling instructions for the columns. FYI the default styling for each new column is to hide it.</p></li>
-<li><p><code><a href="../reference/modify_table_styling.html">modify_table_styling()</a></code> This exported function modifies the printing instructions for a single column or groups of columns.</p></li>
-<li><p><code><a href="../reference/modify_table_body.html">modify_table_body()</a></code> This exported function helps users make changes to <code>.$table_body</code>. The function runs <code>.update_table_styling()</code> internally to maintain internal validity with the printing instructions.</p></li>
+<li><p><code>.create_gtsummary_object(table_body)</code> After a user
+creates a <code>table_body</code>, pass it to this function and the
+skeleton of a gtsummary object is created and returned (including the
+full <code>table_styling</code> list of tables).</p></li>
+<li><p><code>.update_table_styling()</code> After columns are added or
+removed from <code>table_body</code>, run this function to update
+<code>.$table_styling</code> to include or remove styling instructions
+for the columns. FYI the default styling for each new column is to hide
+it.</p></li>
+<li><p><code><a href="../reference/modify_table_styling.html">modify_table_styling()</a></code> This exported function
+modifies the printing instructions for a single column or groups of
+columns.</p></li>
+<li><p><code><a href="../reference/modify_table_body.html">modify_table_body()</a></code> This exported function helps
+users make changes to <code>.$table_body</code>. The function runs
+<code>.update_table_styling()</code> internally to maintain internal
+validity with the printing instructions.</p></li>
 </ol>
 </div>
 </div>
 <div class="section level2">
 <h2 id="printing-a-gtsummary-object">Printing a {gtsummary} object<a class="anchor" aria-label="anchor" href="#printing-a-gtsummary-object"></a>
 </h2>
-<p>All {gtsummary} objects are printed with <code><a href="../reference/print_gtsummary.html">print.gtsummary()</a></code>. Before a {gtsummary} object is printed, it is converted to a {gt} object using <code><a href="../reference/as_gt.html">as_gt()</a></code>. This function takes the {gtsummary} object as its input, and uses the information in <code>.$table_styling</code> to construct a list of {gt} calls that will be executed on <code>.$table_body</code>. After the {gtsummary} object is converted to {gt}, it is then printed as any other {gt} object.</p>
-<p>In some cases, the package defaults to printing with other engines, such as flextable (<code><a href="../reference/as_flex_table.html">as_flex_table()</a></code>), huxtable (<code><a href="../reference/as_hux_table.html">as_hux_table()</a></code>), kableExtra (<code><a href="../reference/as_kable_extra.html">as_kable_extra()</a></code>), and kable (<code><a href="../reference/as_kable.html">as_kable()</a></code>). The default print engine is set with the theme element <code>"pkgwide-str:print_engine"</code></p>
-<p>While the actual print function is slightly more involved, it is basically this:</p>
+<p>All {gtsummary} objects are printed with
+<code><a href="../reference/print_gtsummary.html">print.gtsummary()</a></code>. Before a {gtsummary} object is printed,
+it is converted to a {gt} object using <code><a href="../reference/as_gt.html">as_gt()</a></code>. This
+function takes the {gtsummary} object as its input, and uses the
+information in <code>.$table_styling</code> to construct a list of {gt}
+calls that will be executed on <code>.$table_body</code>. After the
+{gtsummary} object is converted to {gt}, it is then printed as any other
+{gt} object.</p>
+<p>In some cases, the package defaults to printing with other engines,
+such as flextable (<code><a href="../reference/as_flex_table.html">as_flex_table()</a></code>), huxtable
+(<code><a href="../reference/as_hux_table.html">as_hux_table()</a></code>), kableExtra
+(<code><a href="../reference/as_kable_extra.html">as_kable_extra()</a></code>), and kable (<code><a href="../reference/as_kable.html">as_kable()</a></code>).
+The default print engine is set with the theme element
+<code>"pkgwide-str:print_engine"</code></p>
+<p>While the actual print function is slightly more involved, it is
+basically this:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">print.gtsummary</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu">get_theme_element</span><span class="op">(</span><span class="st">"pkgwide-str:print_engine"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="kw"><a href="https://rdrr.io/r/base/switch.html" class="external-link">switch</a></span><span class="op">(</span>
-      <span class="st">"gt"</span> <span class="op">=</span> <span class="fu"><a href="../reference/as_gt.html">as_gt</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,
-      <span class="st">"flextable"</span> <span class="op">=</span> <span class="fu"><a href="../reference/as_flex_table.html">as_flex_table</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,
-      <span class="st">"huxtable"</span> <span class="op">=</span> <span class="fu"><a href="../reference/as_hux_table.html">as_hux_table</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,
-      <span class="st">"kable_extra"</span> <span class="op">=</span> <span class="fu"><a href="../reference/as_kable_extra.html">as_kable_extra</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,
-      <span class="st">"kable"</span> <span class="op">=</span> <span class="fu"><a href="../reference/as_kable.html">as_kable</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">print.gtsummary</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">get_theme_element</span><span class="op">(</span><span class="st">"pkgwide-str:print_engine"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/switch.html" class="external-link">switch</a></span><span class="op">(</span></span>
+<span>      <span class="st">"gt"</span> <span class="op">=</span> <span class="fu"><a href="../reference/as_gt.html">as_gt</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>      <span class="st">"flextable"</span> <span class="op">=</span> <span class="fu"><a href="../reference/as_flex_table.html">as_flex_table</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>      <span class="st">"huxtable"</span> <span class="op">=</span> <span class="fu"><a href="../reference/as_hux_table.html">as_hux_table</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>      <span class="st">"kable_extra"</span> <span class="op">=</span> <span class="fu"><a href="../reference/as_kable_extra.html">as_kable_extra</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>      <span class="st">"kable"</span> <span class="op">=</span> <span class="fu"><a href="../reference/as_kable.html">as_kable</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="the--meta_datadf_stats-tibble">The <code>.$meta_data$df_stats</code> tibble<a class="anchor" aria-label="anchor" href="#the--meta_datadf_stats-tibble"></a>
 </h2>
-<p>Some {gtsummary} tables contain an internal object called <code>.$meta_data</code> containing a list column called <code>"df_stats"</code>. The column is a list of tibbles with each tibble containing the summary statistics presented in the final gtsummary table. While the statistics contained in each <code>"df_stats"</code> tibble can vary within a single gtsummary object, all the tibbles have a few common characteristics.</p>
+<p>Some {gtsummary} tables contain an internal object called
+<code>.$meta_data</code> containing a list column called
+<code>"df_stats"</code>. The column is a list of tibbles with each
+tibble containing the summary statistics presented in the final
+gtsummary table. While the statistics contained in each
+<code>"df_stats"</code> tibble can vary within a single gtsummary
+object, all the tibbles have a few common characteristics.</p>
 <p>Each tibble contain the following columns</p>
-<div id="xqwkugrfwl" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="xzptqulhkn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#xqwkugrfwl .gt_table {
+#xzptqulhkn .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -2615,7 +3162,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-left-color: #D3D3D3;
 }
 
-#xqwkugrfwl .gt_heading {
+#xzptqulhkn .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2627,33 +3174,42 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#xqwkugrfwl .gt_title {
+#xzptqulhkn .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#xzptqulhkn .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
   padding-top: 4px;
   padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
 
-#xqwkugrfwl .gt_subtitle {
+#xzptqulhkn .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
   padding-top: 0;
   padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#xqwkugrfwl .gt_bottom_border {
+#xzptqulhkn .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#xqwkugrfwl .gt_col_headings {
+#xzptqulhkn .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2668,7 +3224,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#xqwkugrfwl .gt_col_heading {
+#xzptqulhkn .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2688,7 +3244,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   overflow-x: hidden;
 }
 
-#xqwkugrfwl .gt_column_spanner_outer {
+#xzptqulhkn .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2700,15 +3256,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 4px;
 }
 
-#xqwkugrfwl .gt_column_spanner_outer:first-child {
+#xzptqulhkn .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#xqwkugrfwl .gt_column_spanner_outer:last-child {
+#xzptqulhkn .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#xqwkugrfwl .gt_column_spanner {
+#xzptqulhkn .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2720,8 +3276,11 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   width: 100%;
 }
 
-#xqwkugrfwl .gt_group_heading {
-  padding: 1px;
+#xzptqulhkn .gt_group_heading {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2740,9 +3299,10 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-width: 1px;
   border-right-color: #D3D3D3;
   vertical-align: middle;
+  text-align: left;
 }
 
-#xqwkugrfwl .gt_empty_group_heading {
+#xzptqulhkn .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2757,15 +3317,15 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   vertical-align: middle;
 }
 
-#xqwkugrfwl .gt_from_md > :first-child {
+#xzptqulhkn .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#xqwkugrfwl .gt_from_md > :last-child {
+#xzptqulhkn .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#xqwkugrfwl .gt_row {
+#xzptqulhkn .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -2784,7 +3344,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   overflow-x: hidden;
 }
 
-#xqwkugrfwl .gt_stub {
+#xzptqulhkn .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2793,10 +3353,29 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-style: solid;
   border-right-width: 2px;
   border-right-color: #D3D3D3;
-  padding-left: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#xqwkugrfwl .gt_summary_row {
+#xzptqulhkn .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#xzptqulhkn .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#xzptqulhkn .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2806,17 +3385,26 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 5px;
 }
 
-#xqwkugrfwl .gt_first_summary_row {
-  padding-top: 1px;
-  padding-bottom: 1px;
-  padding-left: 5px;
-  padding-right: 5px;
+#xzptqulhkn .gt_first_summary_row {
   border-top-style: solid;
-  border-top-width: 2px;
   border-top-color: #D3D3D3;
 }
 
-#xqwkugrfwl .gt_grand_summary_row {
+#xzptqulhkn .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#xzptqulhkn .gt_last_summary_row {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xzptqulhkn .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2826,7 +3414,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   padding-right: 5px;
 }
 
-#xqwkugrfwl .gt_first_grand_summary_row {
+#xzptqulhkn .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -2836,11 +3424,11 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-top-color: #D3D3D3;
 }
 
-#xqwkugrfwl .gt_striped {
+#xzptqulhkn .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#xqwkugrfwl .gt_table_body {
+#xzptqulhkn .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2849,7 +3437,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-bottom-color: #D3D3D3;
 }
 
-#xqwkugrfwl .gt_footnotes {
+#xzptqulhkn .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2863,13 +3451,16 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#xqwkugrfwl .gt_footnote {
+#xzptqulhkn .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding: 1px;
+  padding-left: 1px;
+  padding-right: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#xqwkugrfwl .gt_sourcenotes {
+#xzptqulhkn .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2883,96 +3474,127 @@ The list contains the following data frames <code>header</code>, <code>footnote<
   border-right-color: #D3D3D3;
 }
 
-#xqwkugrfwl .gt_sourcenote {
+#xzptqulhkn .gt_sourcenote {
   font-size: 90%;
-  padding: 1px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#xqwkugrfwl .gt_left {
+#xzptqulhkn .gt_left {
   text-align: left;
 }
 
-#xqwkugrfwl .gt_center {
+#xzptqulhkn .gt_center {
   text-align: center;
 }
 
-#xqwkugrfwl .gt_right {
+#xzptqulhkn .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#xqwkugrfwl .gt_font_normal {
+#xzptqulhkn .gt_font_normal {
   font-weight: normal;
 }
 
-#xqwkugrfwl .gt_font_bold {
+#xzptqulhkn .gt_font_bold {
   font-weight: bold;
 }
 
-#xqwkugrfwl .gt_font_italic {
+#xzptqulhkn .gt_font_italic {
   font-style: italic;
 }
 
-#xqwkugrfwl .gt_super {
+#xzptqulhkn .gt_super {
   font-size: 65%;
 }
 
-#xqwkugrfwl .gt_footnote_marks {
+#xzptqulhkn .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
-  font-size: 65%;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#xzptqulhkn .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#xzptqulhkn .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#xzptqulhkn .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#xzptqulhkn .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#xzptqulhkn .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#xzptqulhkn .gt_indent_5 {
+  text-indent: 25px;
 }
 </style>
 <table class="table gt_table">
 <thead class="gt_col_headings"><tr>
-<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Column</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Description</th>
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Column">Column</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Description">Description</th>
     </tr></thead>
 <tbody class="gt_table_body">
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p><code>variable</code></p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>String of the variable name</p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p><code>label</code></p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>String matching the variable's values in <code>.$table_body$label</code></p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p><code>col_name</code></p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>The column name the statistics appear under in <code>.$table_body</code>, e.g. <code>'stat_0'</code>, <code>'stat_1'</code></p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p><code>variable_levels</code></p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>This column appears if and only if the variable being summarized has multiple levels. The column is equal to the variable's levels.</p>
 </div></td>
 </tr>
 <tr>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Column" class="gt_row gt_left"><div class="gt_from_md">
 <p><code>&lt;statistics&gt;</code></p>
 </div></td>
-<td class="gt_row gt_left"><div class="gt_from_md">
+<td headers="Description" class="gt_row gt_left"><div class="gt_from_md">
 <p>Primarily, the tibble stores the summary statistics for each variable. For example, when the mean is requested in <code><a href="../reference/tbl_summary.html">tbl_summary()</a></code>, there will be a column called <code>'mean'</code>.</p>
 </div></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>The statistics columns each have an attribute called <code>"fmt_fun"</code> containing the formatting function that will be applied before the statistic is placed in <code>.$table_body</code>.</p>
+<p>The statistics columns each have an attribute called
+<code>"fmt_fun"</code> containing the formatting function that will be
+applied before the statistic is placed in <code>.$table_body</code>.</p>
 </div>
   </div>
 
@@ -2993,7 +3615,7 @@ The list contains the following data frames <code>header</code>, <code>footnote<
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

@@ -19,9 +19,6 @@
     <loc>https://www.danieldsjoberg.com/gtsummary/articles/gallery.html</loc>
   </url>
   <url>
-    <loc>https://www.danieldsjoberg.com/gtsummary/articles/global_options.html</loc>
-  </url>
-  <url>
     <loc>https://www.danieldsjoberg.com/gtsummary/articles/gtsummary_definition.html</loc>
   </url>
   <url>
@@ -163,6 +160,9 @@
     <loc>https://www.danieldsjoberg.com/gtsummary/reference/dot-create_gtsummary_object.html</loc>
   </url>
   <url>
+    <loc>https://www.danieldsjoberg.com/gtsummary/reference/dot-table_styling_expr_to_row_number.html</loc>
+  </url>
+  <url>
     <loc>https://www.danieldsjoberg.com/gtsummary/reference/gtsummary-package.html</loc>
   </url>
   <url>
@@ -193,16 +193,22 @@
     <loc>https://www.danieldsjoberg.com/gtsummary/reference/inline_text.tbl_uvregression.html</loc>
   </url>
   <url>
-    <loc>https://www.danieldsjoberg.com/gtsummary/reference/modify.html</loc>
+    <loc>https://www.danieldsjoberg.com/gtsummary/reference/kableExtra_utils.html</loc>
   </url>
   <url>
-    <loc>https://www.danieldsjoberg.com/gtsummary/reference/modify_cols_merge.html</loc>
+    <loc>https://www.danieldsjoberg.com/gtsummary/reference/modify.html</loc>
   </url>
   <url>
     <loc>https://www.danieldsjoberg.com/gtsummary/reference/modify_column_alignment.html</loc>
   </url>
   <url>
     <loc>https://www.danieldsjoberg.com/gtsummary/reference/modify_column_hide.html</loc>
+  </url>
+  <url>
+    <loc>https://www.danieldsjoberg.com/gtsummary/reference/modify_column_indent.html</loc>
+  </url>
+  <url>
+    <loc>https://www.danieldsjoberg.com/gtsummary/reference/modify_column_merge.html</loc>
   </url>
   <url>
     <loc>https://www.danieldsjoberg.com/gtsummary/reference/modify_fmt_fun.html</loc>
@@ -320,8 +326,5 @@
   </url>
   <url>
     <loc>https://www.danieldsjoberg.com/gtsummary/reference/trial.html</loc>
-  </url>
-  <url>
-    <loc>https://www.danieldsjoberg.com/gtsummary/reference/vetted_models.html</loc>
   </url>
 </urlset>

@@ -49,7 +49,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtsummary</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.6.3.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.6.3.9009</span>
       </span>
     </div>
 
@@ -81,7 +81,10 @@
       <a href="../articles/inline_text.html">inline_text() tutorial</a>
     </li>
     <li>
-      <a href="../articles/rmarkdown.html">gtsummary + R markdown</a>
+      <a href="../articles/rmarkdown.html">gtsummary + Quarto/Rmarkdown</a>
+    </li>
+    <li>
+      <a href="../articles/shiny.html">gtsummary + Shiny</a>
     </li>
     <li>
       <a href="../articles/themes.html">gtsummary + themes</a>
@@ -181,12 +184,12 @@ vignette</a> for detailed overview of this function if needed).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tbl_summary.html">tbl_summary</a></span><span class="op">(</span><span class="va">trial2</span>, by <span class="op">=</span> <span class="va">trt</span><span class="op">)</span></span>
 <span><span class="va">tab1</span></span></code></pre></div>
-<div id="eddcitiucn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="hwqlutmbjc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#eddcitiucn .gt_table {
+#hwqlutmbjc .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -211,7 +214,7 @@ vignette</a> for detailed overview of this function if needed).</p>
   border-left-color: #D3D3D3;
 }
 
-#eddcitiucn .gt_heading {
+#hwqlutmbjc .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -223,12 +226,12 @@ vignette</a> for detailed overview of this function if needed).</p>
   border-right-color: #D3D3D3;
 }
 
-#eddcitiucn .gt_caption {
+#hwqlutmbjc .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#eddcitiucn .gt_title {
+#hwqlutmbjc .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -240,7 +243,7 @@ vignette</a> for detailed overview of this function if needed).</p>
   border-bottom-width: 0;
 }
 
-#eddcitiucn .gt_subtitle {
+#hwqlutmbjc .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -252,13 +255,13 @@ vignette</a> for detailed overview of this function if needed).</p>
   border-top-width: 0;
 }
 
-#eddcitiucn .gt_bottom_border {
+#hwqlutmbjc .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#eddcitiucn .gt_col_headings {
+#hwqlutmbjc .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -273,7 +276,7 @@ vignette</a> for detailed overview of this function if needed).</p>
   border-right-color: #D3D3D3;
 }
 
-#eddcitiucn .gt_col_heading {
+#hwqlutmbjc .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -293,7 +296,7 @@ vignette</a> for detailed overview of this function if needed).</p>
   overflow-x: hidden;
 }
 
-#eddcitiucn .gt_column_spanner_outer {
+#hwqlutmbjc .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -305,15 +308,15 @@ vignette</a> for detailed overview of this function if needed).</p>
   padding-right: 4px;
 }
 
-#eddcitiucn .gt_column_spanner_outer:first-child {
+#hwqlutmbjc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#eddcitiucn .gt_column_spanner_outer:last-child {
+#hwqlutmbjc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#eddcitiucn .gt_column_spanner {
+#hwqlutmbjc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -325,7 +328,7 @@ vignette</a> for detailed overview of this function if needed).</p>
   width: 100%;
 }
 
-#eddcitiucn .gt_group_heading {
+#hwqlutmbjc .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -351,7 +354,7 @@ vignette</a> for detailed overview of this function if needed).</p>
   text-align: left;
 }
 
-#eddcitiucn .gt_empty_group_heading {
+#hwqlutmbjc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -366,15 +369,15 @@ vignette</a> for detailed overview of this function if needed).</p>
   vertical-align: middle;
 }
 
-#eddcitiucn .gt_from_md > :first-child {
+#hwqlutmbjc .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#eddcitiucn .gt_from_md > :last-child {
+#hwqlutmbjc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#eddcitiucn .gt_row {
+#hwqlutmbjc .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -393,7 +396,7 @@ vignette</a> for detailed overview of this function if needed).</p>
   overflow-x: hidden;
 }
 
-#eddcitiucn .gt_stub {
+#hwqlutmbjc .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -406,7 +409,7 @@ vignette</a> for detailed overview of this function if needed).</p>
   padding-right: 5px;
 }
 
-#eddcitiucn .gt_stub_row_group {
+#hwqlutmbjc .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -420,11 +423,11 @@ vignette</a> for detailed overview of this function if needed).</p>
   vertical-align: top;
 }
 
-#eddcitiucn .gt_row_group_first td {
+#hwqlutmbjc .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#eddcitiucn .gt_summary_row {
+#hwqlutmbjc .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -434,16 +437,16 @@ vignette</a> for detailed overview of this function if needed).</p>
   padding-right: 5px;
 }
 
-#eddcitiucn .gt_first_summary_row {
+#hwqlutmbjc .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#eddcitiucn .gt_first_summary_row.thick {
+#hwqlutmbjc .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#eddcitiucn .gt_last_summary_row {
+#hwqlutmbjc .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -453,7 +456,7 @@ vignette</a> for detailed overview of this function if needed).</p>
   border-bottom-color: #D3D3D3;
 }
 
-#eddcitiucn .gt_grand_summary_row {
+#hwqlutmbjc .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -463,7 +466,7 @@ vignette</a> for detailed overview of this function if needed).</p>
   padding-right: 5px;
 }
 
-#eddcitiucn .gt_first_grand_summary_row {
+#hwqlutmbjc .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -473,11 +476,11 @@ vignette</a> for detailed overview of this function if needed).</p>
   border-top-color: #D3D3D3;
 }
 
-#eddcitiucn .gt_striped {
+#hwqlutmbjc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#eddcitiucn .gt_table_body {
+#hwqlutmbjc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -486,7 +489,7 @@ vignette</a> for detailed overview of this function if needed).</p>
   border-bottom-color: #D3D3D3;
 }
 
-#eddcitiucn .gt_footnotes {
+#hwqlutmbjc .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -500,7 +503,7 @@ vignette</a> for detailed overview of this function if needed).</p>
   border-right-color: #D3D3D3;
 }
 
-#eddcitiucn .gt_footnote {
+#hwqlutmbjc .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -509,7 +512,7 @@ vignette</a> for detailed overview of this function if needed).</p>
   padding-right: 5px;
 }
 
-#eddcitiucn .gt_sourcenotes {
+#hwqlutmbjc .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -523,7 +526,7 @@ vignette</a> for detailed overview of this function if needed).</p>
   border-right-color: #D3D3D3;
 }
 
-#eddcitiucn .gt_sourcenote {
+#hwqlutmbjc .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -531,64 +534,64 @@ vignette</a> for detailed overview of this function if needed).</p>
   padding-right: 5px;
 }
 
-#eddcitiucn .gt_left {
+#hwqlutmbjc .gt_left {
   text-align: left;
 }
 
-#eddcitiucn .gt_center {
+#hwqlutmbjc .gt_center {
   text-align: center;
 }
 
-#eddcitiucn .gt_right {
+#hwqlutmbjc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#eddcitiucn .gt_font_normal {
+#hwqlutmbjc .gt_font_normal {
   font-weight: normal;
 }
 
-#eddcitiucn .gt_font_bold {
+#hwqlutmbjc .gt_font_bold {
   font-weight: bold;
 }
 
-#eddcitiucn .gt_font_italic {
+#hwqlutmbjc .gt_font_italic {
   font-style: italic;
 }
 
-#eddcitiucn .gt_super {
+#hwqlutmbjc .gt_super {
   font-size: 65%;
 }
 
-#eddcitiucn .gt_footnote_marks {
+#hwqlutmbjc .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#eddcitiucn .gt_asterisk {
+#hwqlutmbjc .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#eddcitiucn .gt_indent_1 {
+#hwqlutmbjc .gt_indent_1 {
   text-indent: 5px;
 }
 
-#eddcitiucn .gt_indent_2 {
+#hwqlutmbjc .gt_indent_2 {
   text-indent: 10px;
 }
 
-#eddcitiucn .gt_indent_3 {
+#hwqlutmbjc .gt_indent_3 {
   text-indent: 15px;
 }
 
-#eddcitiucn .gt_indent_4 {
+#hwqlutmbjc .gt_indent_4 {
   text-indent: 20px;
 }
 
-#eddcitiucn .gt_indent_5 {
+#hwqlutmbjc .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -682,12 +685,12 @@ exponentiate to get the odds ratios.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tbl_m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tbl_regression.html">tbl_regression</a></span><span class="op">(</span><span class="va">m1</span>, exponentiate <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">tbl_m1</span></span></code></pre></div>
-<div id="bjvvimjmxk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="yjbvtrcrry" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#bjvvimjmxk .gt_table {
+#yjbvtrcrry .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -712,7 +715,7 @@ exponentiate to get the odds ratios.</p>
   border-left-color: #D3D3D3;
 }
 
-#bjvvimjmxk .gt_heading {
+#yjbvtrcrry .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -724,12 +727,12 @@ exponentiate to get the odds ratios.</p>
   border-right-color: #D3D3D3;
 }
 
-#bjvvimjmxk .gt_caption {
+#yjbvtrcrry .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#bjvvimjmxk .gt_title {
+#yjbvtrcrry .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -741,7 +744,7 @@ exponentiate to get the odds ratios.</p>
   border-bottom-width: 0;
 }
 
-#bjvvimjmxk .gt_subtitle {
+#yjbvtrcrry .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -753,13 +756,13 @@ exponentiate to get the odds ratios.</p>
   border-top-width: 0;
 }
 
-#bjvvimjmxk .gt_bottom_border {
+#yjbvtrcrry .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#bjvvimjmxk .gt_col_headings {
+#yjbvtrcrry .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -774,7 +777,7 @@ exponentiate to get the odds ratios.</p>
   border-right-color: #D3D3D3;
 }
 
-#bjvvimjmxk .gt_col_heading {
+#yjbvtrcrry .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -794,7 +797,7 @@ exponentiate to get the odds ratios.</p>
   overflow-x: hidden;
 }
 
-#bjvvimjmxk .gt_column_spanner_outer {
+#yjbvtrcrry .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -806,15 +809,15 @@ exponentiate to get the odds ratios.</p>
   padding-right: 4px;
 }
 
-#bjvvimjmxk .gt_column_spanner_outer:first-child {
+#yjbvtrcrry .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#bjvvimjmxk .gt_column_spanner_outer:last-child {
+#yjbvtrcrry .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#bjvvimjmxk .gt_column_spanner {
+#yjbvtrcrry .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -826,7 +829,7 @@ exponentiate to get the odds ratios.</p>
   width: 100%;
 }
 
-#bjvvimjmxk .gt_group_heading {
+#yjbvtrcrry .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -852,7 +855,7 @@ exponentiate to get the odds ratios.</p>
   text-align: left;
 }
 
-#bjvvimjmxk .gt_empty_group_heading {
+#yjbvtrcrry .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -867,15 +870,15 @@ exponentiate to get the odds ratios.</p>
   vertical-align: middle;
 }
 
-#bjvvimjmxk .gt_from_md > :first-child {
+#yjbvtrcrry .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#bjvvimjmxk .gt_from_md > :last-child {
+#yjbvtrcrry .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#bjvvimjmxk .gt_row {
+#yjbvtrcrry .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -894,7 +897,7 @@ exponentiate to get the odds ratios.</p>
   overflow-x: hidden;
 }
 
-#bjvvimjmxk .gt_stub {
+#yjbvtrcrry .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -907,7 +910,7 @@ exponentiate to get the odds ratios.</p>
   padding-right: 5px;
 }
 
-#bjvvimjmxk .gt_stub_row_group {
+#yjbvtrcrry .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -921,11 +924,11 @@ exponentiate to get the odds ratios.</p>
   vertical-align: top;
 }
 
-#bjvvimjmxk .gt_row_group_first td {
+#yjbvtrcrry .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#bjvvimjmxk .gt_summary_row {
+#yjbvtrcrry .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -935,16 +938,16 @@ exponentiate to get the odds ratios.</p>
   padding-right: 5px;
 }
 
-#bjvvimjmxk .gt_first_summary_row {
+#yjbvtrcrry .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#bjvvimjmxk .gt_first_summary_row.thick {
+#yjbvtrcrry .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#bjvvimjmxk .gt_last_summary_row {
+#yjbvtrcrry .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -954,7 +957,7 @@ exponentiate to get the odds ratios.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#bjvvimjmxk .gt_grand_summary_row {
+#yjbvtrcrry .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -964,7 +967,7 @@ exponentiate to get the odds ratios.</p>
   padding-right: 5px;
 }
 
-#bjvvimjmxk .gt_first_grand_summary_row {
+#yjbvtrcrry .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -974,11 +977,11 @@ exponentiate to get the odds ratios.</p>
   border-top-color: #D3D3D3;
 }
 
-#bjvvimjmxk .gt_striped {
+#yjbvtrcrry .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#bjvvimjmxk .gt_table_body {
+#yjbvtrcrry .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -987,7 +990,7 @@ exponentiate to get the odds ratios.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#bjvvimjmxk .gt_footnotes {
+#yjbvtrcrry .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1001,7 +1004,7 @@ exponentiate to get the odds ratios.</p>
   border-right-color: #D3D3D3;
 }
 
-#bjvvimjmxk .gt_footnote {
+#yjbvtrcrry .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -1010,7 +1013,7 @@ exponentiate to get the odds ratios.</p>
   padding-right: 5px;
 }
 
-#bjvvimjmxk .gt_sourcenotes {
+#yjbvtrcrry .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1024,7 +1027,7 @@ exponentiate to get the odds ratios.</p>
   border-right-color: #D3D3D3;
 }
 
-#bjvvimjmxk .gt_sourcenote {
+#yjbvtrcrry .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1032,64 +1035,64 @@ exponentiate to get the odds ratios.</p>
   padding-right: 5px;
 }
 
-#bjvvimjmxk .gt_left {
+#yjbvtrcrry .gt_left {
   text-align: left;
 }
 
-#bjvvimjmxk .gt_center {
+#yjbvtrcrry .gt_center {
   text-align: center;
 }
 
-#bjvvimjmxk .gt_right {
+#yjbvtrcrry .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#bjvvimjmxk .gt_font_normal {
+#yjbvtrcrry .gt_font_normal {
   font-weight: normal;
 }
 
-#bjvvimjmxk .gt_font_bold {
+#yjbvtrcrry .gt_font_bold {
   font-weight: bold;
 }
 
-#bjvvimjmxk .gt_font_italic {
+#yjbvtrcrry .gt_font_italic {
   font-style: italic;
 }
 
-#bjvvimjmxk .gt_super {
+#yjbvtrcrry .gt_super {
   font-size: 65%;
 }
 
-#bjvvimjmxk .gt_footnote_marks {
+#yjbvtrcrry .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#bjvvimjmxk .gt_asterisk {
+#yjbvtrcrry .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#bjvvimjmxk .gt_indent_1 {
+#yjbvtrcrry .gt_indent_1 {
   text-indent: 5px;
 }
 
-#bjvvimjmxk .gt_indent_2 {
+#yjbvtrcrry .gt_indent_2 {
   text-indent: 10px;
 }
 
-#bjvvimjmxk .gt_indent_3 {
+#yjbvtrcrry .gt_indent_3 {
   text-indent: 15px;
 }
 
-#bjvvimjmxk .gt_indent_4 {
+#yjbvtrcrry .gt_indent_4 {
   text-indent: 20px;
 }
 
-#bjvvimjmxk .gt_indent_5 {
+#yjbvtrcrry .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1164,12 +1167,12 @@ objects being inserted between curly brackets. The default is
 <code>pattern = "{estimate} ({conf.level*100}% CI {conf.low}, {conf.high}; {p.value})"</code>.
 You have access the to following fields within the <code>pattern</code>
 argument.</p>
-<div id="wsdxdlsrwx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="eqfofctzrs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#wsdxdlsrwx .gt_table {
+#eqfofctzrs .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1194,7 +1197,7 @@ argument.</p>
   border-left-color: #D3D3D3;
 }
 
-#wsdxdlsrwx .gt_heading {
+#eqfofctzrs .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1206,12 +1209,12 @@ argument.</p>
   border-right-color: #D3D3D3;
 }
 
-#wsdxdlsrwx .gt_caption {
+#eqfofctzrs .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#wsdxdlsrwx .gt_title {
+#eqfofctzrs .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1223,7 +1226,7 @@ argument.</p>
   border-bottom-width: 0;
 }
 
-#wsdxdlsrwx .gt_subtitle {
+#eqfofctzrs .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1235,13 +1238,13 @@ argument.</p>
   border-top-width: 0;
 }
 
-#wsdxdlsrwx .gt_bottom_border {
+#eqfofctzrs .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#wsdxdlsrwx .gt_col_headings {
+#eqfofctzrs .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1256,7 +1259,7 @@ argument.</p>
   border-right-color: #D3D3D3;
 }
 
-#wsdxdlsrwx .gt_col_heading {
+#eqfofctzrs .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1276,7 +1279,7 @@ argument.</p>
   overflow-x: hidden;
 }
 
-#wsdxdlsrwx .gt_column_spanner_outer {
+#eqfofctzrs .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1288,15 +1291,15 @@ argument.</p>
   padding-right: 4px;
 }
 
-#wsdxdlsrwx .gt_column_spanner_outer:first-child {
+#eqfofctzrs .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#wsdxdlsrwx .gt_column_spanner_outer:last-child {
+#eqfofctzrs .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#wsdxdlsrwx .gt_column_spanner {
+#eqfofctzrs .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1308,7 +1311,7 @@ argument.</p>
   width: 100%;
 }
 
-#wsdxdlsrwx .gt_group_heading {
+#eqfofctzrs .gt_group_heading {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1334,7 +1337,7 @@ argument.</p>
   text-align: left;
 }
 
-#wsdxdlsrwx .gt_empty_group_heading {
+#eqfofctzrs .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1349,15 +1352,15 @@ argument.</p>
   vertical-align: middle;
 }
 
-#wsdxdlsrwx .gt_from_md > :first-child {
+#eqfofctzrs .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#wsdxdlsrwx .gt_from_md > :last-child {
+#eqfofctzrs .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#wsdxdlsrwx .gt_row {
+#eqfofctzrs .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1376,7 +1379,7 @@ argument.</p>
   overflow-x: hidden;
 }
 
-#wsdxdlsrwx .gt_stub {
+#eqfofctzrs .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1389,7 +1392,7 @@ argument.</p>
   padding-right: 5px;
 }
 
-#wsdxdlsrwx .gt_stub_row_group {
+#eqfofctzrs .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1403,11 +1406,11 @@ argument.</p>
   vertical-align: top;
 }
 
-#wsdxdlsrwx .gt_row_group_first td {
+#eqfofctzrs .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#wsdxdlsrwx .gt_summary_row {
+#eqfofctzrs .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1417,16 +1420,16 @@ argument.</p>
   padding-right: 5px;
 }
 
-#wsdxdlsrwx .gt_first_summary_row {
+#eqfofctzrs .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#wsdxdlsrwx .gt_first_summary_row.thick {
+#eqfofctzrs .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#wsdxdlsrwx .gt_last_summary_row {
+#eqfofctzrs .gt_last_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1436,7 +1439,7 @@ argument.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#wsdxdlsrwx .gt_grand_summary_row {
+#eqfofctzrs .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1446,7 +1449,7 @@ argument.</p>
   padding-right: 5px;
 }
 
-#wsdxdlsrwx .gt_first_grand_summary_row {
+#eqfofctzrs .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1456,11 +1459,11 @@ argument.</p>
   border-top-color: #D3D3D3;
 }
 
-#wsdxdlsrwx .gt_striped {
+#eqfofctzrs .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#wsdxdlsrwx .gt_table_body {
+#eqfofctzrs .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1469,7 +1472,7 @@ argument.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#wsdxdlsrwx .gt_footnotes {
+#eqfofctzrs .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1483,7 +1486,7 @@ argument.</p>
   border-right-color: #D3D3D3;
 }
 
-#wsdxdlsrwx .gt_footnote {
+#eqfofctzrs .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 1px;
@@ -1492,7 +1495,7 @@ argument.</p>
   padding-right: 5px;
 }
 
-#wsdxdlsrwx .gt_sourcenotes {
+#eqfofctzrs .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1506,7 +1509,7 @@ argument.</p>
   border-right-color: #D3D3D3;
 }
 
-#wsdxdlsrwx .gt_sourcenote {
+#eqfofctzrs .gt_sourcenote {
   font-size: 90%;
   padding-top: 1px;
   padding-bottom: 1px;
@@ -1514,64 +1517,64 @@ argument.</p>
   padding-right: 5px;
 }
 
-#wsdxdlsrwx .gt_left {
+#eqfofctzrs .gt_left {
   text-align: left;
 }
 
-#wsdxdlsrwx .gt_center {
+#eqfofctzrs .gt_center {
   text-align: center;
 }
 
-#wsdxdlsrwx .gt_right {
+#eqfofctzrs .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#wsdxdlsrwx .gt_font_normal {
+#eqfofctzrs .gt_font_normal {
   font-weight: normal;
 }
 
-#wsdxdlsrwx .gt_font_bold {
+#eqfofctzrs .gt_font_bold {
   font-weight: bold;
 }
 
-#wsdxdlsrwx .gt_font_italic {
+#eqfofctzrs .gt_font_italic {
   font-style: italic;
 }
 
-#wsdxdlsrwx .gt_super {
+#eqfofctzrs .gt_super {
   font-size: 65%;
 }
 
-#wsdxdlsrwx .gt_footnote_marks {
+#eqfofctzrs .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#wsdxdlsrwx .gt_asterisk {
+#eqfofctzrs .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#wsdxdlsrwx .gt_indent_1 {
+#eqfofctzrs .gt_indent_1 {
   text-indent: 5px;
 }
 
-#wsdxdlsrwx .gt_indent_2 {
+#eqfofctzrs .gt_indent_2 {
   text-indent: 10px;
 }
 
-#wsdxdlsrwx .gt_indent_3 {
+#eqfofctzrs .gt_indent_3 {
   text-indent: 15px;
 }
 
-#wsdxdlsrwx .gt_indent_4 {
+#eqfofctzrs .gt_indent_4 {
   text-indent: 20px;
 }
 
-#wsdxdlsrwx .gt_indent_5 {
+#eqfofctzrs .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1658,7 +1661,7 @@ page</a>.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtsummary</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.7.0.9006</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.7.2.9000</span>
       </span>
     </div>
 
@@ -97,16 +97,45 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="gtsummary-development-version">gtsummary (development version)<a class="anchor" aria-label="anchor" href="#gtsummary-development-version"></a></h2>
-<ul><li><p>Added French translations for new marginal effects tidiers housed in {broom.helpers}. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1417" class="external-link">#1417</a>)</p></li>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.7.2" id="gtsummary-172">gtsummary 1.7.2<small>2023-07-15</small><a class="anchor" aria-label="anchor" href="#gtsummary-172"></a></h2>
+<ul><li><p>Removed messaging about the former auto-removal of the <code>tbl_summary(group)</code> variable from the table: a change that occurred 3+ years ago in gtsummary v1.3.1</p></li>
+<li><p>Fix in <code><a href="../reference/as_flex_table.html">as_flex_table()</a></code> where source notes were not accurately rendered. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1520" class="external-link">#1520</a>)</p></li>
+<li><p>Fix in column order when <code><a href="../reference/add_ci.html">add_ci()</a></code> is run after <code>add_overall(last=TRUE)</code>. Previously, the overall columns were placed in front. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1525" class="external-link">#1525</a>)</p></li>
+<li><p>Line breaks (i.e. <code>\n</code>) are now removed from column headers and table cells when <code><a href="../reference/as_kable.html">as_kable()</a></code> is called. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1526" class="external-link">#1526</a>)</p></li>
+<li><p>Fix in <code><a href="../reference/as_gt.html">as_gt()</a></code> where columns with common spanning headers were gathered. Corrected with <code>gt::tab_spanner(gather = FALSE)</code>. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1527" class="external-link">#1527</a>)</p></li>
+<li><p>Fix in <code><a href="../reference/remove_row_type.html">remove_row_type()</a></code> where header rows for <code>continuous2</code> type variables was not removed when requested. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1507" class="external-link">#1507</a>)</p></li>
+<li><p>Fix where some default <code><a href="../reference/add_p.tbl_summary.html">add_p.tbl_summary()</a></code> categorical tests were chi-squared when it should have been Fisher’s exact test. This misclassification occurred in some cases when there was a large differential in the missing pattern for one of the variables in the cross table. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1513" class="external-link">#1513</a>)</p></li>
+<li><p>Fix in <code>add_overall(col_label=)</code> where specified label was not always placed. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1505" class="external-link">#1505</a>)</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.7.1" id="gtsummary-171">gtsummary 1.7.1<small>2023-04-27</small><a class="anchor" aria-label="anchor" href="#gtsummary-171"></a></h2>
+<div class="section level4">
+<h4 id="new-functions-1-7-1">New Functions<a class="anchor" aria-label="anchor" href="#new-functions-1-7-1"></a></h4>
+<ul><li>Added <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> S3 method for gtsummary class.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="new-functionality-1-7-1">New Functionality<a class="anchor" aria-label="anchor" href="#new-functionality-1-7-1"></a></h4>
+<ul><li><p>The <code><a href="../reference/tbl_svysummary.html">tbl_svysummary()</a></code> function may now report the design effect, e.g. <code>tbl_svysummary(statistic = ~"{deff}")</code>. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1486" class="external-link">#1486</a>)</p></li>
+<li><p>Added French translations for new marginal effects tidiers housed in {broom.helpers}. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1417" class="external-link">#1417</a>)</p></li>
 <li><p>Added theme elements to control the default headers in <code><a href="../reference/tbl_svysummary.html">tbl_svysummary()</a></code>. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1452" class="external-link">#1452</a>)</p></li>
 <li><p>Improved error messaging in <code><a href="../reference/tbl_uvregression.html">tbl_uvregression()</a></code> when <code>method=</code> argument is not correctly specified. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1469" class="external-link">#1469</a>)</p></li>
+<li><p>Updates to account for changes in {forcats} v1.0.0 and {dplyr} v1.1.0.</p></li>
+<li><p><code><a href="../reference/tbl_svysummary.html">tbl_svysummary()</a></code> can now report design effects (<a href="https://github.com/ddsjoberg/gtsummary/issues/1486" class="external-link">#1486</a>)</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="bug-fixes-1-7-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-7-1"></a></h4>
+<ul><li><p>Fix in the footnote of <code><a href="../reference/add_overall.html">add_overall()</a></code> when run after <code><a href="../reference/tbl_continuous.html">tbl_continuous()</a></code>. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1436" class="external-link">#1436</a>)</p></li>
+<li><p>Updating the levels of precision used in <code>round2()</code>, which is used in the background for every rounded/formatted number in a gtsummary table. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1494" class="external-link">#1494</a>)</p></li>
+<li><p>Bug fix when a subset of CIs are requested in <code>add_ci(include=)</code>. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1484" class="external-link">#1484</a>)</p></li>
 <li><p>Update in <code><a href="../reference/as_hux_table.html">as_hux_table()</a></code> to ensure the Ns in header are not incorrectly auto-formatted by {huxtable}.</p></li>
 <li><p>Fix in the <code>style_*()</code> family of functions. The attributes of the input vector–excluding the class–are retained. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1460" class="external-link">#1460</a>)</p></li>
-<li><p>Updates to account for changes in {forcats} v1.0.0 and {dplyr} v1.1.0.</p></li>
 <li><p>Updated <code><a href="../reference/style_ratio.html">style_ratio()</a></code> to now format negative values.</p></li>
 <li><p>Bug fix in <code><a href="../reference/add_ci.html">add_ci.tbl_svysummary()</a></code> for dichotomous variables.</p></li>
 <li><p><code><a href="../reference/add_ci.html">add_ci.tbl_svysummary()</a></code> now takes properly into account the <code>percent</code> argument (<a href="https://github.com/ddsjoberg/gtsummary/issues/1470" class="external-link">#1470</a>)</p></li>
 </ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.7.0" id="gtsummary-170">gtsummary 1.7.0<small>2023-01-13</small><a class="anchor" aria-label="anchor" href="#gtsummary-170"></a></h2>
 <div class="section level4">

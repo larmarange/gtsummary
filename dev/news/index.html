@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gtsummary</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.9.9.9009</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.0.1.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,8 +45,31 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="gtsummary-development-version">gtsummary (development version)<a class="anchor" aria-label="anchor" href="#gtsummary-development-version"></a></h2>
+<p>Updates to address regressions in the v2.0.0 release:</p>
+<ul><li>The default <code>add_glance_*(glance_fun)</code> function fixed for <code>mice</code> models with class <code>'mira'</code>. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1912" class="external-link">#1912</a>)</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.1" id="gtsummary-201">gtsummary 2.0.1<a class="anchor" aria-label="anchor" href="#gtsummary-201"></a></h2><p class="text-muted">CRAN release: 2024-08-17</p>
+<p>Updates to address regressions in the v2.0.0 release:</p>
+<ul><li>Restore functionality of <code>inline_text.tbl_summary(column)</code> argument to specify a by level when the by variable is a factor. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1883" class="external-link">#1883</a>)</li>
+<li>Correct the order of the columns when the <code>tbl_summary(by)</code> variables has ten or more levels. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1877" class="external-link">#1877</a>)</li>
+<li>Re-establishing strong link between header by variable levels and those in the table body to ensure correct ordering of columns in <code><a href="../reference/tbl_summary.html">tbl_summary()</a></code>.</li>
+<li>The <code>tbl_survfit(times)</code> argument accepts integers once again. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1867" class="external-link">#1867</a>)</li>
+<li>Fix in <code><a href="../reference/tbl_uvregression.html">tbl_uvregression()</a></code> for the <code>formula</code> argument when it includes a hard-coded column name, e.g. <code>formula='{y} ~ {x} + grade'</code>. The hard-coded variable name is now removed from the <code>include</code> argument. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1886" class="external-link">#1886</a>)</li>
+<li>Fix for non-Base R classes tabulated with <code><a href="../reference/tbl_summary.html">tbl_summary()</a></code> that would not coerce to character correctly after <code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist()</a></code>. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1893" class="external-link">#1893</a>)</li>
+<li>Updated the styling function from <code><a href="../reference/style_percent.html">style_percent()</a></code> to <code>style_number(scale=100)</code> when user passes an integer to change the rounding of percentages in <code><a href="../reference/tbl_summary.html">tbl_summary()</a></code>. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1899" class="external-link">#1899</a>)</li>
+</ul><div class="section level4">
+<h4 id="other-updates-2-0-1">Other updates<a class="anchor" aria-label="anchor" href="#other-updates-2-0-1"></a></h4>
+<ul><li><p>The {tidycmprsk} dependency has been removed and the <code>tbl_regression.tidycrr()</code> method has been migrated to the {tidycmprsk} package. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1865" class="external-link">#1865</a>)</p></li>
+<li><p>The class of <code><a href="../reference/tbl_split.html">tbl_split()</a></code> objects has been updated from <code>"tbl_split"</code> to <code>c("tbl_split", "list")</code>. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1854" class="external-link">#1854</a>)</p></li>
+<li><p>Updated the default value of <code>tbl_ard_summary(missing)</code> to <code>"no"</code>. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1857" class="external-link">#1857</a>)</p></li>
+<li><p>Line breaks (i.e. <code>'\n'</code>) are now auto-stripped from gt-rendered tables when in an R markdown or Quarto environment. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1896" class="external-link">#1896</a>)</p></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.0" id="gtsummary-200">gtsummary 2.0.0<a class="anchor" aria-label="anchor" href="#gtsummary-200"></a></h2><p class="text-muted">CRAN release: 2024-07-23</p>
 <div class="section level4">
-<h4 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h4>
+<h4 id="new-features-2-0-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-2-0-0"></a></h4>
 <ul><li><p>Clearer error messages have been introduced throughout the package. We’ve adopted {cli} for all our messaging to users. Our goal was to return a clear message to users for all scenarios.</p></li>
 <li><p>Added functions <code><a href="../reference/tbl_wide_summary.html">tbl_wide_summary()</a></code> and <code><a href="../reference/tbl_ard_wide_summary.html">tbl_ard_wide_summary()</a></code> for simple summaries across multiple columns.</p></li>
 <li>
@@ -55,13 +78,13 @@
 </ul></li>
 <li><p>Previously, if I wanted a single statistic to be reported to additional levels of precision in a <code><a href="../reference/tbl_summary.html">tbl_summary()</a></code> table, I would need to specify the precision of every summary statistic for a variable. Now, we can simple update the one statistic we’re interested in with a named list of vector: <code>tbl_summary(digits = age ~ list(sd = 2))</code>.</p></li>
 <li><p>New functions <code><a href="../reference/tbl_ard_summary.html">tbl_ard_summary()</a></code> and <code><a href="../reference/tbl_ard_continuous.html">tbl_ard_continuous()</a></code> have been added. These provide general tools for creating bespoke summary tables. Rather than accepting a data frame, these functions accept an ARD object (Analysis Results Dataset often created with the {cards} or {cardx} packages). The ARD objects align with the emerging <a href="https://www.cdisc.org/standards/foundational/analysis-results-standard" class="external-link">CDISC Analysis Results Standard</a>. ARDs are now used throughout the package. See below under the “Internal Storage” heading.</p></li>
-<li><p>The default <code>add_global_p(anova_fun)</code> argument value has been updated to <code><a href="../reference/global_pvalue_fun.html">global_pvalue_fun()</a></code>, which is an S3 generic. The default method still calls <code><a href="https://rdrr.io/pkg/car/man/Anova.html" class="external-link">car::Anova()</a></code> for the calculation. Methods for <code><a href="https://mskcc-epi-bio.github.io/tidycmprsk/reference/crr.html" class="external-link">tidycmprsk::crr()</a></code> and <code><a href="https://rdrr.io/pkg/geepack/man/geeglm.html" class="external-link">geepack::geeglm()</a></code> have been added that wrap <code><a href="https://rdrr.io/pkg/aod/man/wald.test.html" class="external-link">aod::wald.test()</a></code> as these regression model types are not supported by <code><a href="https://rdrr.io/pkg/car/man/Anova.html" class="external-link">car::Anova()</a></code>.</p></li>
+<li><p>The default <code>add_global_p(anova_fun)</code> argument value has been updated to <code><a href="../reference/global_pvalue_fun.html">global_pvalue_fun()</a></code>, which is an S3 generic. The default method still calls <code><a href="https://rdrr.io/pkg/car/man/Anova.html" class="external-link">car::Anova()</a></code> for the calculation. Methods for <code>tidycmprsk::crr()</code> and <code><a href="https://rdrr.io/pkg/geepack/man/geeglm.html" class="external-link">geepack::geeglm()</a></code> have been added that wrap <code><a href="https://rdrr.io/pkg/aod/man/wald.test.html" class="external-link">aod::wald.test()</a></code> as these regression model types are not supported by <code><a href="https://rdrr.io/pkg/car/man/Anova.html" class="external-link">car::Anova()</a></code>.</p></li>
 <li><p>The <code><a href="../reference/add_ci.html">add_ci.tbl_summary()</a></code> S3 method has been updated with new ways to calculate the confidence interval: Wald with and without continuity correction, Agresti-Coull, and Jeffreys.</p></li>
 <li><p>Added a family of function <code>label_style_*()</code> that are similar to the <code>style_*()</code> except they return a styling <em>function</em>, rather than a styled value.</p></li>
 <li><p>Functions <code><a href="../reference/tbl_summary.html">tbl_summary()</a></code> and <code><a href="../reference/tbl_svysummary.html">tbl_svysummary()</a></code> have gained the <code>missing_stat</code> argument, which gives users great control over the statistics presented in the missing row of a summary table.</p></li>
 </ul></div>
 <div class="section level4">
-<h4 id="internal-storage-development-version">Internal Storage<a class="anchor" aria-label="anchor" href="#internal-storage-development-version"></a></h4>
+<h4 id="internal-storage-2-0-0">Internal Storage<a class="anchor" aria-label="anchor" href="#internal-storage-2-0-0"></a></h4>
 <ul><li>
 <p>Greater consistency has been put in place for all calculated statistics in gtsummary. Previously, each function handled its own calculations and transforming these statistics into data frames that would be printed. Now each function will first prepare an Analysis Result Dataset (ARD), and ARDs are converted to gtsummary structures using bridge functions (prefixed with <code>brdg_*()</code>). The bridge functions will be exported to allow anyone to more easily extend gtsummary functions.</p>
 <ul><li>These ARDs are now used to calculate the summary statistics for nearly every function in gtsummary. The raw summary statistics are saved in <code>.$cards</code>.</li>
@@ -72,11 +95,11 @@
 <li><p>When the gtsummary package was first written, the gt package was not on CRAN and the version of the package that was available did not have the ability to merge columns. Due to these limitations, the <code>"ci"</code> column was added to show the combined <code>"conf.low"</code> and <code>"conf.high"</code> columns. Column merging in both gt and gtsummary packages has matured over the years, and we are now adopting a more modern approach by using these features. As a result, the <code>"ci"</code> column will eventually be dropped from <code>.$table_body</code>. By using column merging, the conf.low and conf.high remain numeric and we can to continue to update how these columns are formatted. Review <code><a href="../reference/deprecated_ci_column.html">?deprecated_ci_column</a></code> for details.</p></li>
 </ul></div>
 <div class="section level4">
-<h4 id="documentation-development-version">Documentation<a class="anchor" aria-label="anchor" href="#documentation-development-version"></a></h4>
+<h4 id="documentation-2-0-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-0-0"></a></h4>
 <ul><li>The vignettes “FAQ+Gallery”, <code><a href="../reference/tbl_summary.html">tbl_summary()</a></code> Tutorial, <code><a href="../reference/tbl_regression.html">tbl_regression()</a></code> Tutorial, and Quarto+R Markdown have been converted to articles. The URLs on the website have not changed for these pages, but the vignettes are no longer is bundled in the package. This change allows us to provide better documentation, utilizing more tools that don’t need to be included in the package.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="minor-improvements-development-version">Minor Improvements<a class="anchor" aria-label="anchor" href="#minor-improvements-development-version"></a></h4>
+<h4 id="minor-improvements-2-0-0">Minor Improvements<a class="anchor" aria-label="anchor" href="#minor-improvements-2-0-0"></a></h4>
 <ul><li><p>Argument <code>add_p.tbl_summary(adj.vars)</code> was added to more easily add p-values that are adjusted/stratified by other columns in a data frame.</p></li>
 <li>
 <p>Messaging and checks have been improved when tidyselect is invoked in the package, i.e. when the tilda is used to select variables <code>age ~ "Patient Age"</code>. The subset of variables that can be selected is now reduced the variables present in the table. For example, if you have a summary table of patient age (and only patient age), and age is a single column from a data set of many columns and you mis-spell age (<code>aggge ~ "Patient Age"</code>), the error message will now ask if you meant <code>"age"</code> instead of listing every column in the data set.</p>
@@ -96,11 +119,11 @@
 <li><p>The package now uses updated <code><a href="https://rdrr.io/pkg/survey/man/svyquantile.html" class="external-link">survey::svyquantile()</a></code> function to calculate quatiles, which was introduced in survey v4.1</p></li>
 </ul></div>
 <div class="section level4">
-<h4 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h4>
+<h4 id="bug-fixes-2-0-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2-0-0"></a></h4>
 <ul><li>Fix in <code><a href="../reference/add_difference.html">add_difference()</a></code> for paired t-tests. Previously, the sign of the reported difference depended on which group appeared first in the source data. Function has been updated to consistently report the difference as the first group mean minus the second group mean. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1557" class="external-link">#1557</a>)</li>
 </ul></div>
 <div class="section level4">
-<h4 id="lifecycle-changes-development-version">Lifecycle changes<a class="anchor" aria-label="anchor" href="#lifecycle-changes-development-version"></a></h4>
+<h4 id="lifecycle-changes-2-0-0">Lifecycle changes<a class="anchor" aria-label="anchor" href="#lifecycle-changes-2-0-0"></a></h4>
 <ul><li>
 <p>A couple of small changes to the default summary type in <code><a href="../reference/tbl_summary.html">tbl_summary()</a></code> have been made.</p>
 <ul><li>If a column is all <code>NA_character_</code> in <code><a href="../reference/tbl_summary.html">tbl_summary()</a></code>, the default summary type is now <code>"continuous"</code>, where previously it was <code>"dichotomous"</code>.</li>
@@ -274,7 +297,7 @@
 <li><p>The checks for <code>"haven_labelled"</code> class are now only performed for the variables indicated in <code>include=</code> and <code>by=</code> in <code><a href="../reference/tbl_summary.html">tbl_summary()</a></code> and <code><a href="../reference/tbl_svysummary.html">tbl_svysummary()</a></code>. The checks in <code><a href="../reference/tbl_uvregression.html">tbl_uvregression()</a></code> and <code><a href="../reference/tbl_survfit.html">tbl_survfit.data.frame()</a></code> are only applied to the variables in <code>include=</code>, e.g. no checking for the outcome variable(s).</p></li>
 <li><p>Updates to labels and default formatting functions of unweighted statistics presented in <code><a href="../reference/tbl_svysummary.html">tbl_svysummary()</a></code>. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1253" class="external-link">#1253</a>)</p></li>
 <li><p>Adding additional structural checks in <code><a href="../reference/tbl_merge.html">tbl_merge()</a></code> and <code><a href="../reference/inline_text.html">inline_text()</a></code> to provide better error messaging. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1248" class="external-link">#1248</a>)</p></li>
-<li><p>Added <code><a href="../reference/tbl_regression_methods.html">tbl_regression.crr()</a></code> method with messaging recommending use of <code><a href="https://mskcc-epi-bio.github.io/tidycmprsk/reference/crr.html" class="external-link">tidycmprsk::crr()</a></code> instead. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1237" class="external-link">#1237</a>)</p></li>
+<li><p>Added <code><a href="../reference/tbl_regression_methods.html">tbl_regression.crr()</a></code> method with messaging recommending use of <code>tidycmprsk::crr()</code> instead. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1237" class="external-link">#1237</a>)</p></li>
 <li><p>The experimental support for <code>ftExtra::colformat_md()</code> in <code><a href="../reference/as_flex_table.html">as_flex_table()</a></code> has been removed. The function requires evaluated YAML paths and does not allow un-evaluated references like <code>bibliography:: "`r here::here()`"</code>. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1229" class="external-link">#1229</a>)</p></li>
 <li><p>Update for <code>tbl_summary(by=)</code> that now allows for a column named <code>"variable"</code> to be passed. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1234" class="external-link">#1234</a>)</p></li>
 <li><p>Added theme element to control what missing statistic is shown in summary tables with options to display number or percent missing or non-missing or total number of observations. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1224" class="external-link">#1224</a>)</p></li>
@@ -323,7 +346,7 @@
 <div class="section level4">
 <h4 id="new-functions-1-6-0">New Functions<a class="anchor" aria-label="anchor" href="#new-functions-1-6-0"></a></h4>
 <ul><li><p>New function <code><a href="../reference/as_hux_table.html">as_hux_xlsx()</a></code> added to export a formatted {gtsummary} table directly to Excel.</p></li>
-<li><p>Added a <code><a href="../reference/tbl_regression_methods.html">tbl_regression.tidycrr()</a></code> method to summarize competing risks regression models. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1169" class="external-link">#1169</a>)</p></li>
+<li><p>Added a <code>tbl_regression.tidycrr()</code> method to summarize competing risks regression models. (<a href="https://github.com/ddsjoberg/gtsummary/issues/1169" class="external-link">#1169</a>)</p></li>
 <li><p>Added tidier <code><a href="../reference/custom_tidiers.html">tidy_wald_test()</a></code>, a generic function that can calculate Wald test statistics for groups of variables in a model. The tidier expects the model object is supported by both <code><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov()</a></code> and <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> to obtain the variance-covariance matrix and the coef vector.</p></li>
 <li><p>Adding functions <code><a href="../reference/set_gtsummary_theme.html">get_gtsummary_theme()</a></code> and <code><a href="../reference/set_gtsummary_theme.html">with_gtsummary_theme()</a></code> for extracting the current gtsummary theme and running code with a temporarily theme.</p></li>
 <li><p>Added new function <code><a href="../reference/modify_column_indent.html">modify_column_indent()</a></code>–a wrapper for <code><a href="../reference/modify_table_styling.html">modify_table_styling()</a></code>–to make it easier to add and remove indentation in a table.</p></li>

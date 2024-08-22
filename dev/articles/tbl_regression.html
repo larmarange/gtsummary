@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>tbl_regression • gtsummary</title>
+<title>tbl_regression() tutorial • gtsummary</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Atkinson_Hyperlegible-0.4.9/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="tbl_regression">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="tbl_regression() tutorial">
 <meta name="robots" content="noindex">
 </head>
 <body>
@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gtsummary</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.9.9.9009</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.0.1.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,7 +71,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>tbl_regression</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>tbl_regression() tutorial</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/ddsjoberg/gtsummary/blob/main/vignettes/articles/tbl_regression.Rmd" class="external-link"><code>vignettes/articles/tbl_regression.Rmd</code></a></small>
@@ -4770,16 +4770,12 @@ below.</p>
 <td headers="notes" class="gt_row gt_left"><span class="gt_from_md"></span></td>
 </tr>
 <tr>
-<td headers="model" class="gt_row gt_left"><span class="gt_from_md"><code>biglmm::bigglm()</code></span></td>
-<td headers="notes" class="gt_row gt_left"><span class="gt_from_md"></span></td>
-</tr>
-<tr>
 <td headers="model" class="gt_row gt_left"><span class="gt_from_md"><code>brms::brm()</code></span></td>
 <td headers="notes" class="gt_row gt_left"><span class="gt_from_md"><code>broom.mixed</code> package required</span></td>
 </tr>
 <tr>
 <td headers="model" class="gt_row gt_left"><span class="gt_from_md"><code><a href="https://rdrr.io/pkg/cmprsk/man/crr.html" class="external-link">cmprsk::crr()</a></code></span></td>
-<td headers="notes" class="gt_row gt_left"><span class="gt_from_md">Limited support. It is recommended to use <code><a href="https://mskcc-epi-bio.github.io/tidycmprsk/reference/crr.html" class="external-link">tidycmprsk::crr()</a></code> instead.</span></td>
+<td headers="notes" class="gt_row gt_left"><span class="gt_from_md">Limited support. It is recommended to use <code>tidycmprsk::crr()</code> instead.</span></td>
 </tr>
 <tr>
 <td headers="model" class="gt_row gt_left"><span class="gt_from_md"><code>fixest::feglm()</code></span></td>
@@ -4938,7 +4934,7 @@ below.</p>
 <td headers="notes" class="gt_row gt_left"><span class="gt_from_md"></span></td>
 </tr>
 <tr>
-<td headers="model" class="gt_row gt_left"><span class="gt_from_md"><code><a href="https://mskcc-epi-bio.github.io/tidycmprsk/reference/crr.html" class="external-link">tidycmprsk::crr()</a></code></span></td>
+<td headers="model" class="gt_row gt_left"><span class="gt_from_md"><code>tidycmprsk::crr()</code></span></td>
 <td headers="notes" class="gt_row gt_left"><span class="gt_from_md"></span></td>
 </tr>
 <tr>

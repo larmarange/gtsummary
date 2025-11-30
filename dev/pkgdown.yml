@@ -1,16 +1,18 @@
 pandoc: 3.1.11
-pkgdown: 2.1.0
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   articles/gallery: gallery.html
   gtsummary_definition: gtsummary_definition.html
-  inline_text: inline_text.html
+  articles/inline_text: inline_text.html
+  articles/modify-functions: modify-functions.html
   articles/rmarkdown: rmarkdown.html
   articles/shiny: shiny.html
+  articles/tbl_ard-functions: tbl_ard-functions.html
   articles/tbl_regression: tbl_regression.html
   articles/tbl_summary: tbl_summary.html
-  themes: themes.html
-last_built: 2024-08-22T13:27Z
+  articles/themes: themes.html
+last_built: 2025-11-30T19:56Z
 urls:
   reference: https://www.danieldsjoberg.com/gtsummary/reference
   article: https://www.danieldsjoberg.com/gtsummary/articles
